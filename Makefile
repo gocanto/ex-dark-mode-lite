@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-NPM := npm
+PNPM := pnpm
 
 .DEFAULT_GOAL := help
 
@@ -10,16 +10,16 @@ help: ## Show available targets
 	@awk 'BEGIN {FS = ":.*##"; printf "Available targets:\n"} /^[a-zA-Z0-9_-]+:.*##/ {printf "  %-14s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 format: ## Format project files
-	$(NPM) run format
+	$(PNPM) run format
 
 format-all: ## Format every non-ignored project file
-	$(NPM) run format-all
+	$(PNPM) run format-all
 
 typecheck: ## Run TypeScript/Vue type checks
-	$(NPM) run typecheck
+	$(PNPM) run typecheck
 
 build: ## Build the extension
-	$(NPM) run build
+	$(PNPM) run build
 
 check: ## Run the project verification script
-	$(NPM) run check
+	$(PNPM) run check

@@ -1,289 +1,287 @@
 (() => {
-  const SCRIPT_VERSION = 5;
-  const loader = globalThis as typeof globalThis & {
-    __PERSONAL_DARK_MODE_LITE_LOADED__?: number;
-  };
+	const SCRIPT_VERSION = 5;
 
-  if ((loader.__PERSONAL_DARK_MODE_LITE_LOADED__ || 0) >= SCRIPT_VERSION) {
-    return;
-  }
-  loader.__PERSONAL_DARK_MODE_LITE_LOADED__ = SCRIPT_VERSION;
+	const loader = globalThis as typeof globalThis & {
+		__PERSONAL_DARK_MODE_LITE_LOADED__?: number;
+	};
 
-  type ThemeMode = "smart" | "invert" | "soft";
+	if ((loader.__PERSONAL_DARK_MODE_LITE_LOADED__ || 0) >= SCRIPT_VERSION) {
+		return;
+	}
 
-  interface Settings {
-    enabled: boolean;
-    mode: ThemeMode;
-    brightness: number;
-    contrast: number;
-    sepia: number;
-    settingsVersion: number;
-    siteOverrides: Record<string, boolean>;
-  }
+	loader.__PERSONAL_DARK_MODE_LITE_LOADED__ = SCRIPT_VERSION;
 
-  interface ExtensionState {
-    settings: Settings;
-    host: string;
-    active: boolean;
-    siteEnabled: boolean;
-  }
+	type ThemeMode = 'smart' | 'invert' | 'soft';
 
-  interface Color {
-    r: number;
-    g: number;
-    b: number;
-    a: number;
-  }
+	interface Settings {
+		enabled: boolean;
+		mode: ThemeMode;
+		brightness: number;
+		contrast: number;
+		sepia: number;
+		settingsVersion: number;
+		siteOverrides: Record<string, boolean>;
+	}
 
-  type StoredStyle = Record<string, { value: string; priority: string }>;
+	interface ExtensionState {
+		settings: Settings;
+		host: string;
+		active: boolean;
+		siteEnabled: boolean;
+	}
 
-  const STYLE_ID = "personal-dark-mode-lite-style";
-  const ROOT_ATTR = "data-pdm-lite-active";
-  const MODE_ATTR = "data-pdm-lite-mode";
+	interface Color {
+		r: number;
+		g: number;
+		b: number;
+		a: number;
+	}
 
-  const DEFAULT_SETTINGS: Settings = {
-    enabled: true,
-    mode: "smart",
-    brightness: 100,
-    contrast: 92,
-    sepia: 0,
-    settingsVersion: 2,
-    siteOverrides: {},
-  };
+	type StoredStyle = Record<string, { value: string; priority: string }>;
 
-  let settings = { ...DEFAULT_SETTINGS };
-  let smartObserver: MutationObserver | null = null;
-  let smartScanTimer = 0;
-  const originalStyles = new Map<HTMLElement, StoredStyle>();
+	const STYLE_ID = 'personal-dark-mode-lite-style';
+	const ROOT_ATTR = 'data-pdm-lite-active';
+	const MODE_ATTR = 'data-pdm-lite-mode';
 
-  function normalizeHost(host: string) {
-    return host.replace(/^www\./, "");
-  }
+	const DEFAULT_SETTINGS: Settings = {
+		enabled: true,
+		mode: 'smart',
+		brightness: 100,
+		contrast: 92,
+		sepia: 0,
+		settingsVersion: 2,
+		siteOverrides: {},
+	};
 
-  function getHost() {
-    return normalizeHost(location.hostname || "");
-  }
+	let settings = { ...DEFAULT_SETTINGS };
+	let smartObserver: MutationObserver | null = null;
+	let smartScanTimer = 0;
 
-  function getSiteState(nextSettings = settings) {
-    const host = getHost();
-    const override = nextSettings.siteOverrides?.[host];
-    return override ?? true;
-  }
+	const originalStyles = new Map<HTMLElement, StoredStyle>();
 
-  function isActive(nextSettings = settings) {
-    return Boolean(nextSettings.enabled && getSiteState(nextSettings));
-  }
+	function normalizeHost(host: string) {
+		return host.replace(/^www\./, '');
+	}
 
-  function clamp(value: unknown, min: number, max: number) {
-    const number = Number(value);
-    if (!Number.isFinite(number)) {
-      return min;
-    }
+	function getHost() {
+		return normalizeHost(location.hostname || '');
+	}
 
-    return Math.min(max, Math.max(min, number));
-  }
+	function getSiteState(nextSettings = settings) {
+		const host = getHost();
+		const override = nextSettings.siteOverrides?.[host];
 
-  function parseColor(value: string) {
-    const match = String(value).match(/rgba?\(([^)]+)\)/);
-    if (!match) {
-      return null;
-    }
+		return override ?? true;
+	}
 
-    const parts = match[1].split(",").map((part) => Number.parseFloat(part.trim()));
-    const [r, g, b, a = 1] = parts;
-    if (![r, g, b, a].every(Number.isFinite) || a === 0) {
-      return null;
-    }
+	function isActive(nextSettings = settings) {
+		return Boolean(nextSettings.enabled && getSiteState(nextSettings));
+	}
 
-    return { r, g, b, a };
-  }
+	function clamp(value: unknown, min: number, max: number) {
+		const number = Number(value);
 
-  function luminance(color: Color) {
-    const toLinear = (channel: number) => {
-      const value = channel / 255;
-      return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-    };
+		if (!Number.isFinite(number)) {
+			return min;
+		}
 
-    return 0.2126 * toLinear(color.r) + 0.7152 * toLinear(color.g) + 0.0722 * toLinear(color.b);
-  }
+		return Math.min(max, Math.max(min, number));
+	}
 
-  function rememberStyle(element: HTMLElement, property: string) {
-    let original = originalStyles.get(element);
-    if (!original) {
-      original = {};
-      originalStyles.set(element, original);
-    }
+	function parseColor(value: string) {
+		const match = String(value).match(/rgba?\(([^)]+)\)/);
 
-    if (!Object.hasOwn(original, property)) {
-      original[property] = {
-        value: element.style.getPropertyValue(property),
-        priority: element.style.getPropertyPriority(property),
-      };
-    }
-  }
+		if (!match) {
+			return null;
+		}
 
-  function setImportant(element: HTMLElement, property: string, value: string) {
-    rememberStyle(element, property);
-    element.style.setProperty(property, value, "important");
-  }
+		const parts = match[1].split(',').map((part) => Number.parseFloat(part.trim()));
+		const [r, g, b, a = 1] = parts;
 
-  function restoreSmartStyles() {
-    for (const [element, styles] of originalStyles) {
-      if (!element?.style) {
-        continue;
-      }
+		if (![r, g, b, a].every(Number.isFinite) || a === 0) {
+			return null;
+		}
 
-      for (const [property, original] of Object.entries(styles)) {
-        if (original.value) {
-          element.style.setProperty(property, original.value, original.priority);
-        } else {
-          element.style.removeProperty(property);
-        }
-      }
-    }
+		return { r, g, b, a };
+	}
 
-    originalStyles.clear();
-  }
+	function luminance(color: Color) {
+		const toLinear = (channel: number) => {
+			const value = channel / 255;
 
-  function isSkippableElement(element: HTMLElement) {
-    return [
-      "SCRIPT",
-      "STYLE",
-      "META",
-      "LINK",
-      "NOSCRIPT",
-      "IMG",
-      "VIDEO",
-      "PICTURE",
-      "CANVAS",
-      "SVG",
-      "PATH",
-      "IFRAME",
-    ].includes(element.tagName);
-  }
+			return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+		};
 
-  function smartenElement(element: Element) {
-    if (!(element instanceof HTMLElement) || isSkippableElement(element)) {
-      return;
-    }
+		return 0.2126 * toLinear(color.r) + 0.7152 * toLinear(color.g) + 0.0722 * toLinear(color.b);
+	}
 
-    const computed = getComputedStyle(element);
-    const bg = parseColor(computed.backgroundColor);
-    const text = parseColor(computed.color);
-    const isRootSurface = element === document.body || element === document.documentElement;
+	function rememberStyle(element: HTMLElement, property: string) {
+		let original = originalStyles.get(element);
 
-    if (isRootSurface) {
-      setImportant(element, "background-color", "#111318");
-      setImportant(element, "color", "#e9edf5");
-      return;
-    }
+		if (!original) {
+			original = {};
+			originalStyles.set(element, original);
+		}
 
-    if (bg) {
-      const bgLuma = luminance(bg);
-      if (bgLuma > 0.78) {
-        setImportant(element, "background-color", "#171b22");
-      } else if (bgLuma > 0.58) {
-        setImportant(element, "background-color", "#202632");
-      }
-    }
+		if (!Object.hasOwn(original, property)) {
+			original[property] = {
+				value: element.style.getPropertyValue(property),
+				priority: element.style.getPropertyPriority(property),
+			};
+		}
+	}
 
-    if (text) {
-      const textLuma = luminance(text);
-      if (element.closest("a")) {
-        setImportant(element, "color", "#8ab4ff");
-      } else if (textLuma < 0.42) {
-        setImportant(element, "color", "#e9edf5");
-      }
-    }
+	function setImportant(element: HTMLElement, property: string, value: string) {
+		rememberStyle(element, property);
+		element.style.setProperty(property, value, 'important');
+	}
 
-    for (const side of ["top", "right", "bottom", "left"]) {
-      const property = `border-${side}-color`;
-      const border = parseColor(computed.getPropertyValue(property));
-      if (border && luminance(border) > 0.52) {
-        setImportant(element, property, "rgba(255, 255, 255, 0.18)");
-      }
-    }
-  }
+	function restoreSmartStyles() {
+		for (const [element, styles] of originalStyles) {
+			if (!element?.style) {
+				continue;
+			}
 
-  function scanSmartMode() {
-    smartScanTimer = 0;
-    if (!isActive(settings) || settings.mode !== "smart") {
-      return;
-    }
+			for (const [property, original] of Object.entries(styles)) {
+				if (original.value) {
+					element.style.setProperty(property, original.value, original.priority);
+				} else {
+					element.style.removeProperty(property);
+				}
+			}
+		}
 
-    const elements = [
-      document.documentElement,
-      document.body,
-      ...document.querySelectorAll("body *"),
-    ];
+		originalStyles.clear();
+	}
 
-    for (let index = 0; index < elements.length && index < 5000; index += 1) {
-      const element = elements[index];
-      if (element) {
-        smartenElement(element);
-      }
-    }
-  }
+	function isSkippableElement(element: HTMLElement) {
+		return ['SCRIPT', 'STYLE', 'META', 'LINK', 'NOSCRIPT', 'IMG', 'VIDEO', 'PICTURE', 'CANVAS', 'SVG', 'PATH', 'IFRAME'].includes(element.tagName);
+	}
 
-  function scheduleSmartScan() {
-    if (smartScanTimer) {
-      return;
-    }
+	function smartenElement(element: Element) {
+		if (!(element instanceof HTMLElement) || isSkippableElement(element)) {
+			return;
+		}
 
-    smartScanTimer = window.setTimeout(scanSmartMode, 80);
-  }
+		const computed = getComputedStyle(element);
+		const bg = parseColor(computed.backgroundColor);
+		const text = parseColor(computed.color);
+		const isRootSurface = element === document.body || element === document.documentElement;
 
-  function startSmartMode() {
-    scheduleSmartScan();
-    if (smartObserver) {
-      return;
-    }
+		if (isRootSurface) {
+			setImportant(element, 'background-color', '#111318');
+			setImportant(element, 'color', '#e9edf5');
 
-    smartObserver = new MutationObserver(scheduleSmartScan);
-    smartObserver.observe(document.documentElement, {
-      childList: true,
-      subtree: true,
-    });
-  }
+			return;
+		}
 
-  function stopSmartMode() {
-    if (smartObserver) {
-      smartObserver.disconnect();
-      smartObserver = null;
-    }
+		if (bg) {
+			const bgLuma = luminance(bg);
 
-    if (smartScanTimer) {
-      window.clearTimeout(smartScanTimer);
-      smartScanTimer = 0;
-    }
+			if (bgLuma > 0.78) {
+				setImportant(element, 'background-color', '#171b22');
+			} else if (bgLuma > 0.58) {
+				setImportant(element, 'background-color', '#202632');
+			}
+		}
 
-    restoreSmartStyles();
-  }
+		if (text) {
+			const textLuma = luminance(text);
 
-  function migrateSettings(storedSettings?: Partial<Settings> | null): Settings {
-    const nextSettings: Settings = {
-      ...DEFAULT_SETTINGS,
-      ...(storedSettings || {}),
-      siteOverrides: {
-        ...DEFAULT_SETTINGS.siteOverrides,
-        ...(storedSettings?.siteOverrides || {}),
-      },
-    };
+			if (element.closest('a')) {
+				setImportant(element, 'color', '#8ab4ff');
+			} else if (textLuma < 0.42) {
+				setImportant(element, 'color', '#e9edf5');
+			}
+		}
 
-    if (!storedSettings?.settingsVersion && storedSettings?.mode === "invert") {
-      nextSettings.mode = "smart";
-    }
+		for (const side of ['top', 'right', 'bottom', 'left']) {
+			const property = `border-${side}-color`;
+			const border = parseColor(computed.getPropertyValue(property));
 
-    nextSettings.settingsVersion = DEFAULT_SETTINGS.settingsVersion;
-    return nextSettings;
-  }
+			if (border && luminance(border) > 0.52) {
+				setImportant(element, property, 'rgba(255, 255, 255, 0.18)');
+			}
+		}
+	}
 
-  function createCSS(nextSettings: Settings) {
-    const brightness = clamp(nextSettings.brightness, 50, 150);
-    const contrast = clamp(nextSettings.contrast, 50, 150);
-    const sepia = clamp(nextSettings.sepia, 0, 100);
+	function scanSmartMode() {
+		smartScanTimer = 0;
+		if (!isActive(settings) || settings.mode !== 'smart') {
+			return;
+		}
 
-    return `
+		const elements = [document.documentElement, document.body, ...document.querySelectorAll('body *')];
+
+		for (let index = 0; index < elements.length && index < 5000; index += 1) {
+			const element = elements[index];
+
+			if (element) {
+				smartenElement(element);
+			}
+		}
+	}
+
+	function scheduleSmartScan() {
+		if (smartScanTimer) {
+			return;
+		}
+
+		smartScanTimer = window.setTimeout(scanSmartMode, 80);
+	}
+
+	function startSmartMode() {
+		scheduleSmartScan();
+		if (smartObserver) {
+			return;
+		}
+
+		smartObserver = new MutationObserver(scheduleSmartScan);
+		smartObserver.observe(document.documentElement, {
+			childList: true,
+			subtree: true,
+		});
+	}
+
+	function stopSmartMode() {
+		if (smartObserver) {
+			smartObserver.disconnect();
+			smartObserver = null;
+		}
+
+		if (smartScanTimer) {
+			window.clearTimeout(smartScanTimer);
+			smartScanTimer = 0;
+		}
+
+		restoreSmartStyles();
+	}
+
+	function migrateSettings(storedSettings?: Partial<Settings> | null): Settings {
+		const nextSettings: Settings = {
+			...DEFAULT_SETTINGS,
+			...(storedSettings || {}),
+			siteOverrides: {
+				...DEFAULT_SETTINGS.siteOverrides,
+				...(storedSettings?.siteOverrides || {}),
+			},
+		};
+
+		if (!storedSettings?.settingsVersion && storedSettings?.mode === 'invert') {
+			nextSettings.mode = 'smart';
+		}
+
+		nextSettings.settingsVersion = DEFAULT_SETTINGS.settingsVersion;
+
+		return nextSettings;
+	}
+
+	function createCSS(nextSettings: Settings) {
+		const brightness = clamp(nextSettings.brightness, 50, 150);
+		const contrast = clamp(nextSettings.contrast, 50, 150);
+		const sepia = clamp(nextSettings.sepia, 0, 100);
+
+		return `
       html[${ROOT_ATTR}="true"] {
         color-scheme: dark !important;
         --pdm-lite-bg: #111318;
@@ -439,117 +437,123 @@
         background-color: var(--pdm-lite-surface-2) !important;
       }
     `;
-  }
+	}
 
-  function ensureStyle() {
-    let style = document.getElementById(STYLE_ID) as HTMLStyleElement | null;
-    if (!style) {
-      style = document.createElement("style");
-      style.id = STYLE_ID;
-      style.setAttribute("data-owner", "personal-dark-mode-lite");
-      (document.documentElement || document.head || document).appendChild(style);
-    }
+	function ensureStyle() {
+		let style = document.getElementById(STYLE_ID) as HTMLStyleElement | null;
 
-    return style;
-  }
+		if (!style) {
+			style = document.createElement('style');
+			style.id = STYLE_ID;
+			style.setAttribute('data-owner', 'personal-dark-mode-lite');
+			(document.documentElement || document.head || document).appendChild(style);
+		}
 
-  function applySettings(nextSettings: Partial<Settings>) {
-    const previousMode = settings.mode;
-    settings = migrateSettings(nextSettings);
+		return style;
+	}
 
-    const root = document.documentElement;
-    const active = isActive(settings);
-    const style = ensureStyle();
-    const mode = ["smart", "soft", "invert"].includes(settings.mode) ? settings.mode : "smart";
+	function applySettings(nextSettings: Partial<Settings>) {
+		const previousMode = settings.mode;
 
-    style.textContent = createCSS(settings);
-    root.setAttribute(MODE_ATTR, mode);
+		settings = migrateSettings(nextSettings);
 
-    if (previousMode === "smart" && (!active || mode !== "smart")) {
-      stopSmartMode();
-    }
+		const root = document.documentElement;
+		const active = isActive(settings);
+		const style = ensureStyle();
+		const mode = ['smart', 'soft', 'invert'].includes(settings.mode) ? settings.mode : 'smart';
 
-    if (active) {
-      root.setAttribute(ROOT_ATTR, "true");
-      if (mode === "smart") {
-        startSmartMode();
-      }
-    } else {
-      root.removeAttribute(ROOT_ATTR);
-      stopSmartMode();
-    }
-  }
+		style.textContent = createCSS(settings);
+		root.setAttribute(MODE_ATTR, mode);
 
-  function readSettings() {
-    chrome.storage.sync.get(null, (storedSettings) => {
-      applySettings(storedSettings as Partial<Settings>);
-    });
-  }
+		if (previousMode === 'smart' && (!active || mode !== 'smart')) {
+			stopSmartMode();
+		}
 
-  function updateSettings(patch: Partial<Settings>, callback?: (state: ExtensionState) => void) {
-    const nextSettings = migrateSettings({
-      ...settings,
-      ...patch,
-      siteOverrides: patch.siteOverrides
-        ? { ...patch.siteOverrides }
-        : { ...settings.siteOverrides },
-    });
+		if (active) {
+			root.setAttribute(ROOT_ATTR, 'true');
+			if (mode === 'smart') {
+				startSmartMode();
+			}
+		} else {
+			root.removeAttribute(ROOT_ATTR);
+			stopSmartMode();
+		}
+	}
 
-    chrome.storage.sync.set(nextSettings, () => {
-      applySettings(nextSettings);
-      callback?.(getState());
-    });
-  }
+	function readSettings() {
+		chrome.storage.sync.get(null, (storedSettings) => {
+			applySettings(storedSettings as Partial<Settings>);
+		});
+	}
 
-  function getState(): ExtensionState {
-    return {
-      settings,
-      host: getHost(),
-      active: isActive(settings),
-      siteEnabled: getSiteState(settings),
-    };
-  }
+	function updateSettings(patch: Partial<Settings>, callback?: (state: ExtensionState) => void) {
+		const nextSettings = migrateSettings({
+			...settings,
+			...patch,
+			siteOverrides: patch.siteOverrides ? { ...patch.siteOverrides } : { ...settings.siteOverrides },
+		});
 
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    if (!message || message.source !== "personal-dark-mode-lite") {
-      return false;
-    }
+		chrome.storage.sync.set(nextSettings, () => {
+			applySettings(nextSettings);
+			callback?.(getState());
+		});
+	}
 
-    if (message.type === "get-state") {
-      sendResponse(getState());
-      return false;
-    }
+	function getState(): ExtensionState {
+		return {
+			settings,
+			host: getHost(),
+			active: isActive(settings),
+			siteEnabled: getSiteState(settings),
+		};
+	}
 
-    if (message.type === "set-settings") {
-      updateSettings(message.patch || {}, sendResponse);
-      return true;
-    }
+	chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+		if (!message || message.source !== 'personal-dark-mode-lite') {
+			return false;
+		}
 
-    if (message.type === "toggle-site") {
-      const host = getHost();
-      const siteOverrides = {
-        ...settings.siteOverrides,
-        [host]: !getSiteState(settings),
-      };
+		if (message.type === 'get-state') {
+			sendResponse(getState());
 
-      updateSettings({ siteOverrides }, sendResponse);
-      return true;
-    }
+			return false;
+		}
 
-    return false;
-  });
+		if (message.type === 'set-settings') {
+			updateSettings(message.patch || {}, sendResponse);
 
-  chrome.storage.onChanged.addListener((changes, areaName) => {
-    if (areaName !== "sync") {
-      return;
-    }
+			return true;
+		}
 
-    const nextSettings: Partial<Settings> = { ...settings };
-    for (const [key, change] of Object.entries(changes)) {
-      nextSettings[key as keyof Settings] = change.newValue as never;
-    }
-    applySettings(nextSettings);
-  });
+		if (message.type === 'toggle-site') {
+			const host = getHost();
 
-  readSettings();
+			const siteOverrides = {
+				...settings.siteOverrides,
+				[host]: !getSiteState(settings),
+			};
+
+			updateSettings({ siteOverrides }, sendResponse);
+
+			return true;
+		}
+
+		return false;
+	});
+
+	chrome.storage.onChanged.addListener((changes, areaName) => {
+		if (areaName !== 'sync') {
+			return;
+		}
+
+		const nextSettings: Partial<Settings> = { ...settings };
+
+		for (const [key, change] of Object.entries(changes)) {
+			nextSettings[key as keyof Settings] = change.newValue as never;
+		}
+
+		applySettings(nextSettings);
+	});
+
+	readSettings();
 })();

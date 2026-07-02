@@ -4,14 +4,15 @@
   "private": true,
   "type": "module",
   "description": "A compact MV3 dark-mode extension built with Vue, Vite+, Tailwind CSS, and shadcn-vue.",
+  "packageManager": "pnpm@11.9.0",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "vue-tsc --noEmit",
-    "check": "npm run typecheck && npm run build",
-    "format": "vp fmt",
-    "format-all": "vp fmt --fix"
+    "check": "pnpm run typecheck && pnpm run build",
+    "format": "node scripts/format.mjs changed",
+    "format-all": "node scripts/format.mjs all"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.2",
