@@ -1,6 +1,6 @@
-import { err, ok, type Result } from '@lib/result';
+import { Results, type Result } from '@lib/result';
 import type { ExtensionState, PopupMessage } from '@/types/settings';
-import { parseExtensionState } from '@/types/settings';
+import { SettingsCodec } from '@/types/settings';
 
 /** Minimal Chrome APIs used by the popup runtime adapter. */
 export interface ChromeRuntimeApi {
@@ -50,76 +50,83 @@ export class ContentScriptInjectionFailed extends Error {
 /** Expected Chrome runtime failures handled by the popup controller. */
 export type PopupRuntimeError = NoActiveTab | TabMessageFailed | ContentScriptInjectionFailed;
 
-/** Check whether the required extension APIs are available. */
-export function isExtensionRuntimeAvailable(runtime = getChromeRuntime()) {
-	return Boolean(runtime?.tabs && runtime.storage && runtime.scripting);
-}
+/** Adapts the Chrome extension APIs the popup depends on into typed results. */
+export class ChromeRuntimeAdapter {
+	constructor(private readonly runtime: ChromeRuntimeApi | undefined = ChromeRuntimeAdapter.resolveRuntime()) {}
 
-/** Query the active tab from the current Chrome window. */
-export async function queryActiveTab(runtime = getChromeRuntime()) {
-	const [tab] = (await runtime?.tabs?.query({ active: true, currentWindow: true })) ?? [];
+	/** Check whether the required extension APIs are available. */
+	isExtensionRuntimeAvailable() {
+		return Boolean(this.runtime?.tabs && this.runtime.storage && this.runtime.scripting);
+	}
 
-	return {
-		id: tab?.id ?? null,
-		url: tab?.url ?? '',
-	};
-}
+	/** Query the active tab from the current Chrome window. */
+	async queryActiveTab() {
+		const [tab] = (await this.runtime?.tabs?.query({ active: true, currentWindow: true })) ?? [];
 
-/** Send a typed popup message to the active tab. */
-export function sendToTab(tabId: number | null, message: PopupMessage, runtime = getChromeRuntime()): Promise<Result<ExtensionState, NoActiveTab | TabMessageFailed>> {
-	return new Promise((resolve) => {
+		return {
+			id: tab?.id ?? null,
+			url: tab?.url ?? '',
+		};
+	}
+
+	/** Send a typed popup message to the active tab. */
+	sendToTab(tabId: number | null, message: PopupMessage): Promise<Result<ExtensionState, NoActiveTab | TabMessageFailed>> {
+		const runtime = this.runtime;
+
+		return new Promise((resolve) => {
+			if (!tabId) {
+				resolve(Results.err(new NoActiveTab()));
+
+				return;
+			}
+
+			if (!runtime?.tabs) {
+				resolve(Results.err(new TabMessageFailed('runtime-error', 'Extension runtime unavailable')));
+
+				return;
+			}
+
+			runtime.tabs.sendMessage(tabId, message, (response: unknown) => {
+				const error = runtime.runtime?.lastError;
+
+				if (error) {
+					resolve(Results.err(new TabMessageFailed('runtime-error', error.message)));
+
+					return;
+				}
+
+				const state = SettingsCodec.parseExtensionState(response);
+
+				if (!state) {
+					resolve(Results.err(new TabMessageFailed('invalid-response', response)));
+
+					return;
+				}
+
+				resolve(Results.ok(state));
+			});
+		});
+	}
+
+	/** Inject the extension content script into the active tab. */
+	async injectContentScript(tabId: number | null): Promise<Result<void, NoActiveTab | ContentScriptInjectionFailed>> {
 		if (!tabId) {
-			resolve(err(new NoActiveTab()));
-
-			return;
+			return Results.err(new NoActiveTab());
 		}
 
-		if (!runtime?.tabs) {
-			resolve(err(new TabMessageFailed('runtime-error', 'Extension runtime unavailable')));
+		try {
+			await this.runtime?.scripting?.executeScript({
+				target: { tabId, allFrames: true },
+				files: ['src/content.js'],
+			});
 
-			return;
+			return Results.ok(undefined);
+		} catch (error) {
+			return Results.err(new ContentScriptInjectionFailed(error));
 		}
-
-		runtime.tabs.sendMessage(tabId, message, (response: unknown) => {
-			const error = runtime.runtime?.lastError;
-
-			if (error) {
-				resolve(err(new TabMessageFailed('runtime-error', error.message)));
-
-				return;
-			}
-
-			const state = parseExtensionState(response);
-
-			if (!state) {
-				resolve(err(new TabMessageFailed('invalid-response', response)));
-
-				return;
-			}
-
-			resolve(ok(state));
-		});
-	});
-}
-
-/** Inject the extension content script into the active tab. */
-export async function injectContentScript(tabId: number | null, runtime = getChromeRuntime()): Promise<Result<void, NoActiveTab | ContentScriptInjectionFailed>> {
-	if (!tabId) {
-		return err(new NoActiveTab());
 	}
 
-	try {
-		await runtime?.scripting?.executeScript({
-			target: { tabId, allFrames: true },
-			files: ['src/content.js'],
-		});
-
-		return ok(undefined);
-	} catch (error) {
-		return err(new ContentScriptInjectionFailed(error));
+	private static resolveRuntime(): ChromeRuntimeApi | undefined {
+		return typeof chrome === 'undefined' ? undefined : chrome;
 	}
-}
-
-function getChromeRuntime(): ChromeRuntimeApi | undefined {
-	return typeof chrome === 'undefined' ? undefined : chrome;
 }

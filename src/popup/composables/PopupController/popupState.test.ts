@@ -1,25 +1,25 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_SETTINGS } from '@/types/settings';
-import { buildPopupState, canInjectIntoTab, getActiveHost } from '@composables/PopupController/popupState';
+import { PopupStateBuilder } from '@composables/PopupController/popupState';
 
 describe('popup state helpers', () => {
 	it('extracts normalized hosts from tab URLs', () => {
-		expect(getActiveHost('https://www.example.com/path')).toBe('example.com');
-		expect(getActiveHost('notaurl')).toBe('');
-		expect(getActiveHost('')).toBe('');
+		expect(PopupStateBuilder.getActiveHost('https://www.example.com/path')).toBe('example.com');
+		expect(PopupStateBuilder.getActiveHost('notaurl')).toBe('');
+		expect(PopupStateBuilder.getActiveHost('')).toBe('');
 	});
 
 	it('checks injectable tab URLs', () => {
-		expect(canInjectIntoTab('https://example.com')).toBe(true);
-		expect(canInjectIntoTab('http://example.com')).toBe(true);
-		expect(canInjectIntoTab('chrome://extensions')).toBe(false);
-		expect(canInjectIntoTab('notaurl')).toBe(false);
-		expect(canInjectIntoTab('')).toBe(false);
+		expect(PopupStateBuilder.canInjectIntoTab('https://example.com')).toBe(true);
+		expect(PopupStateBuilder.canInjectIntoTab('http://example.com')).toBe(true);
+		expect(PopupStateBuilder.canInjectIntoTab('chrome://extensions')).toBe(false);
+		expect(PopupStateBuilder.canInjectIntoTab('notaurl')).toBe(false);
+		expect(PopupStateBuilder.canInjectIntoTab('')).toBe(false);
 	});
 
 	it('builds popup state from settings and tab URL', () => {
 		expect(
-			buildPopupState(
+			PopupStateBuilder.buildPopupState(
 				{
 					...DEFAULT_SETTINGS,
 					siteOverrides: {

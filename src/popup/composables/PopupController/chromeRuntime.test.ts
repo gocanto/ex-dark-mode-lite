@@ -1,64 +1,64 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_SETTINGS, EXTENSION_MESSAGE_SOURCE } from '@/types/settings';
-import { ContentScriptInjectionFailed, injectContentScript, NoActiveTab, sendToTab, TabMessageFailed, type ChromeRuntimeApi } from '@composables/PopupController/chromeRuntime';
+import { ChromeRuntimeAdapter, ContentScriptInjectionFailed, NoActiveTab, TabMessageFailed, type ChromeRuntimeApi } from '@composables/PopupController/chromeRuntime';
 
 describe('chrome runtime helpers', () => {
 	it('returns parsed tab state for successful messages', async () => {
-		const runtime = createRuntime({
-			response: {
-				settings: {
-					...DEFAULT_SETTINGS,
-					mode: 'soft',
+		const adapter = new ChromeRuntimeAdapter(
+			createRuntime({
+				response: {
+					settings: {
+						...DEFAULT_SETTINGS,
+						mode: 'soft',
+					},
+					host: 'example.com',
+					active: true,
+					siteEnabled: true,
 				},
-				host: 'example.com',
-				active: true,
-				siteEnabled: true,
-			},
-		});
+			}),
+		);
 
-		const result = await sendToTab(1, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' }, runtime);
+		const result = await adapter.sendToTab(1, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' });
 
-		expect(result).toEqual({
-			_tag: 'ok',
-			value: {
-				settings: {
-					...DEFAULT_SETTINGS,
-					mode: 'soft',
-				},
-				host: 'example.com',
-				active: true,
-				siteEnabled: true,
+		expect(result.isOk()).toBe(true);
+		expect(result.isOk() && result.value).toEqual({
+			settings: {
+				...DEFAULT_SETTINGS,
+				mode: 'soft',
 			},
+			host: 'example.com',
+			active: true,
+			siteEnabled: true,
 		});
 	});
 
 	it('returns typed message failures', async () => {
-		const noTab = await sendToTab(null, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' });
+		const noTab = await new ChromeRuntimeAdapter(createRuntime({})).sendToTab(null, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' });
 
-		const runtimeError = await sendToTab(1, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' }, createRuntime({ lastErrorMessage: 'Receiving end does not exist' }));
+		const runtimeError = await new ChromeRuntimeAdapter(createRuntime({ lastErrorMessage: 'Receiving end does not exist' })).sendToTab(1, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' });
 
-		const invalidResponse = await sendToTab(1, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' }, createRuntime({ response: null }));
+		const invalidResponse = await new ChromeRuntimeAdapter(createRuntime({ response: null })).sendToTab(1, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' });
 
-		expect(noTab._tag).toBe('err');
-		expect(noTab._tag === 'err' && noTab.error).toBeInstanceOf(NoActiveTab);
-		expect(runtimeError._tag).toBe('err');
-		expect(runtimeError._tag === 'err' && runtimeError.error).toBeInstanceOf(TabMessageFailed);
-		expect(invalidResponse._tag).toBe('err');
-		expect(invalidResponse._tag === 'err' && invalidResponse.error).toBeInstanceOf(TabMessageFailed);
+		expect(noTab.isErr()).toBe(true);
+		expect(noTab.isErr() && noTab.error).toBeInstanceOf(NoActiveTab);
+		expect(runtimeError.isErr()).toBe(true);
+		expect(runtimeError.isErr() && runtimeError.error).toBeInstanceOf(TabMessageFailed);
+		expect(invalidResponse.isErr()).toBe(true);
+		expect(invalidResponse.isErr() && invalidResponse.error).toBeInstanceOf(TabMessageFailed);
 	});
 
 	it('returns typed injection results', async () => {
-		const success = await injectContentScript(1, createRuntime({}));
+		const success = await new ChromeRuntimeAdapter(createRuntime({})).injectContentScript(1);
 
-		const noTab = await injectContentScript(null, createRuntime({}));
+		const noTab = await new ChromeRuntimeAdapter(createRuntime({})).injectContentScript(null);
 
-		const failed = await injectContentScript(1, createRuntime({ injectionError: new Error('blocked') }));
+		const failed = await new ChromeRuntimeAdapter(createRuntime({ injectionError: new Error('blocked') })).injectContentScript(1);
 
-		expect(success).toEqual({ _tag: 'ok', value: undefined });
-		expect(noTab._tag).toBe('err');
-		expect(noTab._tag === 'err' && noTab.error).toBeInstanceOf(NoActiveTab);
-		expect(failed._tag).toBe('err');
-		expect(failed._tag === 'err' && failed.error).toBeInstanceOf(ContentScriptInjectionFailed);
+		expect(success.isOk()).toBe(true);
+		expect(noTab.isErr()).toBe(true);
+		expect(noTab.isErr() && noTab.error).toBeInstanceOf(NoActiveTab);
+		expect(failed.isErr()).toBe(true);
+		expect(failed.isErr() && failed.error).toBeInstanceOf(ContentScriptInjectionFailed);
 	});
 });
 
