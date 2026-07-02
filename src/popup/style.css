@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -19,28 +21,37 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
 }
 
 :root {
   color-scheme: dark;
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Geist Variable", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 14px;
-  --background: oklch(0.16 0.018 255);
-  --foreground: oklch(0.96 0.012 255);
-  --card: oklch(0.2 0.022 255);
-  --card-foreground: oklch(0.96 0.012 255);
-  --primary: oklch(0.67 0.12 198);
-  --primary-foreground: oklch(0.14 0.018 255);
-  --secondary: oklch(0.29 0.03 255);
-  --secondary-foreground: oklch(0.92 0.012 255);
-  --muted: oklch(0.27 0.025 255);
-  --muted-foreground: oklch(0.75 0.025 255);
-  --accent: oklch(0.28 0.05 175);
-  --accent-foreground: oklch(0.94 0.018 175);
-  --border: oklch(0.33 0.03 255);
-  --input: oklch(0.31 0.03 255);
-  --ring: oklch(0.67 0.12 198);
+
+  --background: #070a0e;
+  --foreground: #eaeef4;
+  --card: #12171f;
+  --card-foreground: #eaeef4;
+  --primary: #2fe0ce;
+  --primary-foreground: #06201d;
+  --secondary: #232b37;
+  --secondary-foreground: #dde3eb;
+  --muted: #171d26;
+  --muted-foreground: #8b95a4;
+  --accent: #123430;
+  --accent-foreground: #2fe0ce;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: #171d26;
+  --ring: #2fe0ce;
+
+  /* Extra design tokens used by popup components. */
+  --label: #5e6879;
+  --accent-teal: #2fe0ce;
+  --track: #232b37;
+  --fill-from: #1cc3b2;
+  --fill-to: #2fe0ce;
 }
 
 * {
@@ -48,12 +59,15 @@
 }
 
 body {
-  width: 320px;
+  width: 360px;
   margin: 0;
   display: grid;
   overflow: hidden;
   place-items: start center;
-  background: var(--background);
+  color: var(--foreground);
+  background:
+    radial-gradient(240px 130px at 50% -10px, rgba(35, 213, 195, 0.14), transparent 70%),
+    linear-gradient(180deg, #0f141c 0%, #0b0f16 100%);
 }
 
 #app {
@@ -65,21 +79,30 @@ input {
   font: inherit;
 }
 
+::selection {
+  background: rgba(35, 213, 195, 0.3);
+}
+
 .theme-slider::-webkit-slider-thumb {
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--primary);
+  width: 15px;
+  height: 15px;
   border-radius: 999px;
   appearance: none;
-  background: var(--background);
-  box-shadow: 0 1px 4px oklch(0 0 0 / 0.35);
+  background: #f3f5f8;
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .theme-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--primary);
+  width: 15px;
+  height: 15px;
+  border: none;
   border-radius: 999px;
-  background: var(--background);
-  box-shadow: 0 1px 4px oklch(0 0 0 / 0.35);
+  background: #f3f5f8;
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }

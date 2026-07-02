@@ -1,108 +1,113 @@
-import { ok, type Result } from '@lib/result';
+import { Results, type Result } from '@lib/result';
 import type { ExtensionState, Settings, SettingsPatch } from '@/types/settings';
-import { DEFAULT_SETTINGS, EXTENSION_MESSAGE_SOURCE, migrateSettings } from '@/types/settings';
-import { canInjectIntoTab, buildPopupState } from '@composables/PopupController/popupState';
-import { injectContentScript, sendToTab, type PopupRuntimeError } from '@composables/PopupController/chromeRuntime';
+import { DEFAULT_SETTINGS, EXTENSION_MESSAGE_SOURCE, SettingsCodec } from '@/types/settings';
+import { PopupStateBuilder } from '@composables/PopupController/popupState';
+import type { ChromeRuntimeAdapter, PopupRuntimeError } from '@composables/PopupController/chromeRuntime';
 
-interface PopupRuntimeContext {
+/** Tab context required by popup settings operations. */
+export interface PopupRuntimeContext {
 	activeTabId: number | null;
 	activeTabUrl: string;
-	isExtensionRuntime: boolean;
 }
 
-/** Read normalized extension settings from Chrome storage or defaults. */
-export async function readSettings(isExtensionRuntime: boolean) {
-	if (!isExtensionRuntime) {
-		return DEFAULT_SETTINGS;
+/** Reads, writes, and applies settings across storage and the active tab. */
+export class SettingsGateway {
+	constructor(private readonly runtime: ChromeRuntimeAdapter) {}
+
+	/** Merge a parsed settings patch into existing settings. */
+	static mergeSettingsPatch(existing: Settings, patch: SettingsPatch) {
+		return SettingsCodec.migrateSettings({
+			...existing,
+			...patch,
+			siteOverrides: {
+				...existing.siteOverrides,
+				...(patch.siteOverrides || {}),
+			},
+		});
 	}
 
-	const settings = await chrome.storage.sync.get(null);
-
-	return migrateSettings(settings);
-}
-
-/** Persist settings into Chrome storage when the extension runtime is available. */
-export async function writeSettings(isExtensionRuntime: boolean, nextSettings: Settings) {
-	if (!isExtensionRuntime) {
-		return;
-	}
-
-	await chrome.storage.sync.set(nextSettings);
-}
-
-/** Merge a parsed settings patch into existing settings. */
-export function mergeSettingsPatch(existing: Settings, patch: SettingsPatch) {
-	return migrateSettings({
-		...existing,
-		...patch,
-		siteOverrides: {
-			...existing.siteOverrides,
-			...(patch.siteOverrides || {}),
-		},
-	});
-}
-
-/** Apply settings to the active tab when possible, falling back to persisted settings. */
-export async function applySettingsToActiveTab(context: PopupRuntimeContext, nextSettings: Settings): Promise<ExtensionState> {
-	if (!context.isExtensionRuntime || !canInjectIntoTab(context.activeTabUrl)) {
-		await writeSettings(context.isExtensionRuntime, nextSettings);
-
-		return buildPopupState(nextSettings, context.activeTabUrl);
-	}
-
-	const message = {
-		source: EXTENSION_MESSAGE_SOURCE,
-		type: 'set-settings',
-		patch: nextSettings,
-	} satisfies Parameters<typeof sendToTab>[1];
-
-	const firstAttempt = await sendToTab(context.activeTabId, message);
-
-	if (firstAttempt._tag === 'ok') {
-		return firstAttempt.value;
-	}
-
-	const injected = await injectContentScript(context.activeTabId);
-
-	if (injected._tag === 'ok') {
-		const secondAttempt = await sendToTab(context.activeTabId, message);
-
-		if (secondAttempt._tag === 'ok') {
-			return secondAttempt.value;
+	/** Read normalized extension settings from Chrome storage or defaults. */
+	async readSettings() {
+		if (!this.runtime.isExtensionRuntimeAvailable()) {
+			return DEFAULT_SETTINGS;
 		}
+
+		const settings = await chrome.storage.sync.get(null);
+
+		return SettingsCodec.migrateSettings(settings);
 	}
 
-	await writeSettings(context.isExtensionRuntime, nextSettings);
+	/** Persist settings into Chrome storage when the extension runtime is available. */
+	async writeSettings(nextSettings: Settings) {
+		if (!this.runtime.isExtensionRuntimeAvailable()) {
+			return;
+		}
 
-	return buildPopupState(nextSettings, context.activeTabUrl);
-}
-
-/** Read extension state from the active tab, injecting the content script once if needed. */
-export async function getStateFromTab(context: PopupRuntimeContext): Promise<Result<ExtensionState, PopupRuntimeError>> {
-	const firstAttempt = await sendToTab(context.activeTabId, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' });
-
-	if (firstAttempt._tag === 'ok') {
-		return firstAttempt;
+		await chrome.storage.sync.set(nextSettings);
 	}
 
-	if (!canInjectIntoTab(context.activeTabUrl)) {
-		return firstAttempt;
+	/** Apply settings to the active tab when possible, falling back to persisted settings. */
+	async applySettingsToActiveTab(context: PopupRuntimeContext, nextSettings: Settings): Promise<ExtensionState> {
+		if (!this.runtime.isExtensionRuntimeAvailable() || !PopupStateBuilder.canInjectIntoTab(context.activeTabUrl)) {
+			await this.writeSettings(nextSettings);
+
+			return PopupStateBuilder.buildPopupState(nextSettings, context.activeTabUrl);
+		}
+
+		const message = {
+			source: EXTENSION_MESSAGE_SOURCE,
+			type: 'set-settings',
+			patch: nextSettings,
+		} satisfies Parameters<ChromeRuntimeAdapter['sendToTab']>[1];
+
+		const firstAttempt = await this.runtime.sendToTab(context.activeTabId, message);
+
+		if (firstAttempt.isOk()) {
+			return firstAttempt.value;
+		}
+
+		const injected = await this.runtime.injectContentScript(context.activeTabId);
+
+		if (injected.isOk()) {
+			const secondAttempt = await this.runtime.sendToTab(context.activeTabId, message);
+
+			if (secondAttempt.isOk()) {
+				return secondAttempt.value;
+			}
+		}
+
+		await this.writeSettings(nextSettings);
+
+		return PopupStateBuilder.buildPopupState(nextSettings, context.activeTabUrl);
 	}
 
-	const injected = await injectContentScript(context.activeTabId);
+	/** Read extension state from the active tab, injecting the content script once if needed. */
+	async getStateFromTab(context: PopupRuntimeContext): Promise<Result<ExtensionState, PopupRuntimeError>> {
+		const firstAttempt = await this.runtime.sendToTab(context.activeTabId, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' });
 
-	if (injected._tag === 'err') {
-		return injected;
+		if (firstAttempt.isOk()) {
+			return firstAttempt;
+		}
+
+		if (!PopupStateBuilder.canInjectIntoTab(context.activeTabUrl)) {
+			return firstAttempt;
+		}
+
+		const injected = await this.runtime.injectContentScript(context.activeTabId);
+
+		if (injected.isErr()) {
+			return injected;
+		}
+
+		return this.runtime.sendToTab(context.activeTabId, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' });
 	}
 
-	return sendToTab(context.activeTabId, { source: EXTENSION_MESSAGE_SOURCE, type: 'get-state' });
-}
+	/** Resolve popup state from the active tab or from persisted settings. */
+	async getState(context: PopupRuntimeContext): Promise<Result<ExtensionState, PopupRuntimeError>> {
+		if (this.runtime.isExtensionRuntimeAvailable() && PopupStateBuilder.canInjectIntoTab(context.activeTabUrl)) {
+			return this.getStateFromTab(context);
+		}
 
-/** Resolve popup state from the active tab or from persisted settings. */
-export async function getState(context: PopupRuntimeContext): Promise<Result<ExtensionState, PopupRuntimeError>> {
-	if (context.isExtensionRuntime && canInjectIntoTab(context.activeTabUrl)) {
-		return getStateFromTab(context);
+		return Results.ok(PopupStateBuilder.buildPopupState(await this.readSettings(), context.activeTabUrl));
 	}
-
-	return ok(buildPopupState(await readSettings(context.isExtensionRuntime), context.activeTabUrl));
 }

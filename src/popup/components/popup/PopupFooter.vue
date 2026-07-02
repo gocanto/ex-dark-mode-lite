@@ -1,30 +1,25 @@
 <script setup lang="ts">
-import { RotateCcw, Sparkles } from '@lucide/vue';
-import { Button } from '@components/ui/button';
+import { ArrowUpRight, Heart, Sparkles } from '@lucide/vue';
 
 defineProps<{
 	status: string;
 }>();
-
-const emit = defineEmits<{
-	reset: [];
-}>();
 </script>
 
 <template>
-	<footer class="flex min-h-8 items-center justify-between gap-3">
-		<Button variant="ghost" size="sm" title="Reset settings" @click="emit('reset')">
-			<RotateCcw />
-			Reset
-		</Button>
-		<span class="flex min-w-0 items-center gap-1 truncate text-xs text-muted-foreground" aria-live="polite">
-			<Sparkles v-if="status" class="size-3" aria-hidden="true" />
+	<footer class="mt-1.5 border-t pt-3.5" style="border-color: rgba(255, 255, 255, 0.05)">
+		<p v-if="status" class="mb-2 flex min-w-0 items-center justify-center gap-1 truncate text-[11px] text-muted-foreground" aria-live="polite">
+			<Sparkles class="size-3" aria-hidden="true" />
 			{{ status }}
-		</span>
+		</p>
+		<div class="flex items-center justify-center gap-[5px] text-[11px] text-[#6C7686]">
+			<span>Crafted with</span>
+			<Heart class="size-[11px] text-[#F2667B]" fill="currentColor" stroke="none" aria-hidden="true" />
+			<span>by</span>
+			<a class="flex items-center gap-[3px] font-semibold text-[#AEB7C4] transition-colors hover:text-foreground" href="https://gocanto.sh" target="_blank" rel="noreferrer">
+				gocanto.sh
+				<ArrowUpRight class="size-[11px]" :stroke-width="2" aria-hidden="true" />
+			</a>
+		</div>
 	</footer>
-
-	<p class="border-t border-border pt-3 text-center text-xs text-muted-foreground">
-		Made with love ❤️ by
-		<a class="font-medium text-foreground underline-offset-4 hover:underline" href="https://gocanto.sh" target="_blank"> gocanto.sh </a>
-	</p>
 </template>
