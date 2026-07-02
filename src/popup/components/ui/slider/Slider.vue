@@ -44,11 +44,11 @@ function readRangeInputValue(event: Event) {
 
 <template>
 	<div :class="cn('relative flex w-full touch-none select-none items-center', props.class)">
-		<div class="absolute left-0 right-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-secondary">
-			<div class="h-full rounded-full bg-primary" :style="{ width: `${percent}%` }" />
+		<div class="absolute left-0 right-0 top-1/2 h-[5px] -translate-y-1/2 rounded-full" style="background: var(--track)">
+			<div class="h-full rounded-full" :style="{ width: `${percent}%`, background: 'linear-gradient(90deg, var(--fill-from), var(--fill-to))' }" />
 		</div>
 		<input
-			class="theme-slider relative z-10 h-5 w-full cursor-pointer appearance-none bg-transparent"
+			class="theme-slider relative z-10 h-4 w-full cursor-pointer appearance-none bg-transparent"
 			type="range"
 			:aria-label="label"
 			:min="min"
