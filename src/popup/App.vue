@@ -322,5 +322,12 @@ onMounted(() => {
         {{ status }}
       </span>
     </footer>
+
+    <p class="text-center text-xs text-muted-foreground">
+      Made with love ❤️ by
+      <a class="font-medium text-foreground underline-offset-4 hover:underline" href="https://gocanto.sh" target="_blank">
+        gocanto.sh
+      </a>
+    </p>
   </main>
 </template>
