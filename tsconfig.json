@@ -19,6 +19,7 @@
     "types": ["chrome"],
     "baseUrl": ".",
     "paths": {
+      "#scripts/*": ["scripts/*"],
       "@/*": ["src/*"],
       "@popup/*": ["src/popup/*"],
       "@components/*": ["src/popup/components/*"],

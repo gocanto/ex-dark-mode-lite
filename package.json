@@ -5,6 +5,9 @@
   "type": "module",
   "description": "A compact MV3 dark-mode extension built with Vue, Vite+, Tailwind CSS, and shadcn-vue.",
   "packageManager": "pnpm@11.9.0",
+  "imports": {
+    "#scripts/*": "./scripts/*.ts"
+  },
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
