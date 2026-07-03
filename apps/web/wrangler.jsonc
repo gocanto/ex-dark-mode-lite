@@ -1,0 +1,10 @@
+{
+	// Cloudflare Pages project for the Dark Mode - Lite marketing site.
+	// Used by the Pages Git integration and by `wrangler pages deploy` (run from
+	// this directory). The custom domain dark-mode.link is attached in the
+	// Cloudflare dashboard.
+	"name": "dark-mode-lite-web",
+	"compatibility_date": "2026-07-03",
+	// Relative to this file (apps/web); VitePress builds into .vitepress/dist.
+	"pages_build_output_dir": ".vitepress/dist"
+}

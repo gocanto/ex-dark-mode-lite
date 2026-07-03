@@ -1,0 +1,45 @@
+name: Deploy web (Cloudflare Pages)
+
+# Manual, on-demand deploy of the marketing site to Cloudflare Pages.
+# Day-to-day deploys are handled by the Pages Git integration (auto-build on
+# push, configured in the Cloudflare dashboard). This workflow exists for
+# on-demand / out-of-band deploys and never runs on push, so it does not add a
+# job to `main` (see AGENTS.md).
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   CLOUDFLARE_API_TOKEN   - token with "Cloudflare Pages: Edit" permission
+#   CLOUDFLARE_ACCOUNT_ID  - the account that owns the Pages project
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Pages branch to deploy to (use the production branch for a live deploy)'
+        type: string
+        default: main
+
+concurrency:
+  group: deploy-web
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @dml/web build
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/web
+          command: pages deploy .vitepress/dist --project-name=dark-mode-lite-web --branch=${{ inputs.branch }}

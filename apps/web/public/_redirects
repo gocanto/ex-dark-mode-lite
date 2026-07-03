@@ -1,0 +1,4 @@
+# Cloudflare Pages redirects. Copied to the site root by VitePress.
+# VitePress `cleanUrls` already serves /privacy and /terms without extensions,
+# so no redirects are required today. Add rules here as routes evolve, e.g.:
+#   /old-path  /new-path  301
