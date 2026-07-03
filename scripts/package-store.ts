@@ -6,6 +6,9 @@ import { dirname, join, relative, resolve } from 'node:path';
 
 const REQUIRED_DIST_FILES = ['manifest.json', 'popup/index.html', 'src/content.js', 'icons/icon-16.png', 'icons/icon-32.png', 'icons/icon-48.png', 'icons/icon-128.png'];
 
+// dist paths that Vite copies from public/ but must not ship in the store zip.
+const PACKAGE_EXCLUDED_PATHS = ['store-assets'];
+
 const REQUIRED_PERMISSIONS = ['activeTab', 'scripting', 'storage'];
 const BROAD_HOST_PERMISSIONS = ['http://*/*', 'https://*/*'];
 const RELEASES_DIR = '/Users/gocanto/.cache/codex/ex-dark-mode-lite/releases';
@@ -92,6 +95,14 @@ async function createStorePackage(zipPath: string) {
 
 	try {
 		await cp(distRoot, stagedDist, { recursive: true });
+
+		// Vite copies public/ verbatim into dist/, which pulls in the store
+		// listing / marketing sources under public/store-assets. Those are not
+		// part of the shipped extension, so strip them from the staged copy
+		// before zipping to keep the uploaded package lean.
+		for (const excluded of PACKAGE_EXCLUDED_PATHS) {
+			await rm(join(stagedDist, excluded), { recursive: true, force: true });
+		}
 
 		const files = await listFiles(stagedDist);
 
