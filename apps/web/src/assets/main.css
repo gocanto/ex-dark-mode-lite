@@ -1,0 +1,168 @@
+@import 'tailwindcss';
+
+/* Scan the shared UI package (symlinked under node_modules, so auto-detection skips it). */
+@source '../../../../packages/ui/src';
+
+/* Inclusive max-width breakpoints matching the original design (Tailwind's max-[…] is exclusive). */
+@custom-variant max-920 (@media (max-width: 920px));
+@custom-variant max-640 (@media (max-width: 640px));
+
+@theme {
+	--color-night: #06080b;
+	--color-ink: #eaeef4;
+	--color-ink-bright: #f5f8fc;
+	--color-teal: #2fe0ce;
+	--color-mist: #8b95a4;
+	--color-slate: #98a3b2;
+	--color-dim: #6c7686;
+
+	/* shadcn-vue semantic tokens, mapped onto the Dark Mode Lite palette so the
+	   primitives look on-brand rather than generic. */
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	--font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+	--font-mono: 'Geist Mono', monospace;
+	--font-serif: 'Instrument Serif', Georgia, serif;
+
+	--animate-dml-up: dml-up 0.6s both ease-out;
+	--animate-dml-float: dml-float 7s ease-in-out infinite;
+	--animate-dml-marquee: dml-marquee 34s linear infinite;
+
+	@keyframes dml-up {
+		from {
+			opacity: 0;
+			transform: translateY(16px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes dml-float {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-9px);
+		}
+	}
+
+	@keyframes dml-marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(-50%);
+		}
+	}
+}
+
+:root {
+	color-scheme: dark;
+
+	--background: #06080b;
+	--foreground: #eaeef4;
+	--card: #12171f;
+	--card-foreground: #eaeef4;
+	--primary: #2fe0ce;
+	--primary-foreground: #042420;
+	--secondary: #232b37;
+	--secondary-foreground: #dde3eb;
+	--muted: #171d26;
+	--muted-foreground: #8b95a4;
+	--accent: #123430;
+	--accent-foreground: #2fe0ce;
+	--border: rgba(255, 255, 255, 0.08);
+	--input: #171d26;
+	--ring: #2fe0ce;
+}
+
+html,
+body {
+	margin: 0;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+/* Offset in-page anchor targets (#top, #features, #how) so the sticky nav
+   doesn't clip section headings when smooth-scrolling. */
+[id] {
+	scroll-margin-top: 88px;
+}
+
+body {
+	background: var(--color-night);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+::selection {
+	background: rgba(35, 213, 195, 0.3);
+}
+
+/* Dual-gradient grid with a radial mask — not expressible as utilities. */
+.bg-grid {
+	position: absolute;
+	inset: 0;
+	background-image:
+		linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+	background-size: 64px 64px;
+	-webkit-mask-image: radial-gradient(120% 90% at 70% 0%, #000 30%, transparent 72%);
+	mask-image: radial-gradient(120% 90% at 70% 0%, #000 30%, transparent 72%);
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* Smooth page/section reveal used by view transitions and the back-to-top button. */
+.dml-fade-enter-active,
+.dml-fade-leave-active {
+	transition:
+		opacity 0.35s ease,
+		transform 0.35s ease;
+}
+
+.dml-fade-enter-from {
+	opacity: 0;
+	transform: translateY(12px);
+}
+
+.dml-fade-leave-to {
+	opacity: 0;
+	transform: translateY(-8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	.animate-dml-up,
+	.animate-dml-float,
+	.animate-dml-marquee {
+		animation: none;
+	}
+
+	.dml-fade-enter-active,
+	.dml-fade-leave-active {
+		transition: none;
+	}
+}

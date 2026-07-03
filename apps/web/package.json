@@ -1,0 +1,32 @@
+{
+  "name": "@dml/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Marketing website for Dark Mode - Lite, built with VitePress.",
+  "imports": {
+    "#web/*": "./src/*.ts"
+  },
+  "scripts": {
+    "dev": "vitepress dev --host 127.0.0.1",
+    "build": "vitepress build",
+    "preview": "vitepress preview --host 127.0.0.1",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@dml/ui": "workspace:*",
+    "@lucide/vue": "catalog:",
+    "class-variance-authority": "catalog:",
+    "reka-ui": "catalog:",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@dml/tsconfig": "workspace:*",
+    "@tailwindcss/vite": "catalog:",
+    "@types/node": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vitepress": "catalog:",
+    "vue-tsc": "catalog:"
+  }
+}

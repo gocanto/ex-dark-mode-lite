@@ -1,0 +1,12 @@
+{
+  "extends": "@dml/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "#web/*": ["src/*"],
+      "@web/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", ".vitepress/**/*.ts", ".vitepress/**/*.vue"]
+}

@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://darkmodelite.example.com/sitemap.xml
