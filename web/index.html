@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dark Mode Lite — Dark mode for every site</title>
+  <meta name="description" content="Dark Mode Lite is a free Chrome extension that gives every website a beautiful dark theme — smart contrast tuning, saved presets, per-site control. No account, no tracking.">
+  <meta property="og:title" content="Dark Mode Lite — Dark mode for every site">
+  <meta property="og:description" content="A free Chrome extension that rewrites each page as you land on it — matching contrast to content, not just flipping colors.">
+  <link rel="icon" type="image/svg+xml" href="logo-a.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+
+  <!-- atmosphere -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <svg class="bg-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 13.2A8.2 8.2 0 1 1 10.8 3.5a6.4 6.4 0 0 0 9.7 9.7Z"/></svg>
+
+  <div class="content">
+
+    <!-- announcement -->
+    <div class="announcement">
+      <span class="announcement-version"><span class="announcement-dot"></span>v1.4</span>
+      <span>Smart per-page tuning &amp; saved presets are here</span>
+    </div>
+
+    <!-- nav -->
+    <nav class="nav">
+      <a href="#top" class="brand">
+        <img src="logo-a.svg" width="36" height="36" class="brand-logo" alt="Dark Mode Lite">
+        <span class="brand-name">Dark Mode Lite</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how" class="nav-link">How it works</a>
+        <a href="https://gocanto.sh" target="_blank" rel="noopener" class="nav-link">gocanto.sh</a>
+        <a href="https://chromewebstore.google.com/" target="_blank" rel="noopener" class="nav-cta">Add to Chrome</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <header id="top" class="hero">
+      <div class="hero-grid">
+
+        <!-- copy -->
+        <div>
+          <div class="kicker">Free Chrome extension</div>
+          <h1 class="hero-title">Dark mode<br>for <span class="serif">every site</span><span class="accent">.</span></h1>
+          <p class="hero-sub">The web still ships blinding white. Dark Mode Lite rewrites each page as you land on it — matching contrast to content, not just flipping colors.</p>
+
+          <div class="hero-actions">
+            <a href="https://chromewebstore.google.com/" target="_blank" rel="noopener" class="btn-primary">Add to Chrome — Free
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+            </a>
+            <span class="hero-note">No account · No tracking</span>
+          </div>
+        </div>
+
+        <!-- before/after browser demo -->
+        <div class="demo">
+          <div class="demo-window">
+            <!-- browser bar -->
+            <div class="demo-bar">
+              <span class="demo-dot"></span>
+              <span class="demo-dot"></span>
+              <span class="demo-dot"></span>
+              <div class="demo-url-wrap">
+                <div class="demo-url">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2FE0CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="5" y="11" width="14" height="9" rx="2"/></svg>
+                  minimal-blog.com
+                </div>
+              </div>
+              <div class="demo-bar-spacer"></div>
+            </div>
+
+            <!-- split content -->
+            <div class="demo-body">
+              <!-- LIGHT layer (full) -->
+              <div class="demo-pane demo-pane--light">
+                <div class="pane-tag">Technology</div>
+                <div class="pane-title">The quiet case for calmer screens</div>
+                <div class="pane-byline">
+                  <span class="pane-avatar"></span>
+                  <span class="pane-byline-text">By A. Canto · 6 min read</span>
+                </div>
+                <div class="pane-img"></div>
+                <p class="pane-p">For anyone reading after dark, glare is the difference between finishing an article and closing the tab. Most sites never offer a way out.</p>
+                <p class="pane-p pane-p--muted">So we built one that works on all of them.</p>
+              </div>
+              <!-- DARK layer (clipped to right half) -->
+              <div class="demo-pane demo-pane--dark">
+                <div class="pane-tag">Technology</div>
+                <div class="pane-title">The quiet case for calmer screens</div>
+                <div class="pane-byline">
+                  <span class="pane-avatar"></span>
+                  <span class="pane-byline-text">By A. Canto · 6 min read</span>
+                </div>
+                <div class="pane-img"></div>
+                <p class="pane-p">For anyone reading after dark, glare is the difference between finishing an article and closing the tab. Most sites never offer a way out.</p>
+                <p class="pane-p pane-p--muted">So we built one that works on all of them.</p>
+              </div>
+
+              <!-- labels -->
+              <div class="demo-label demo-label--before">Before</div>
+              <div class="demo-label demo-label--after">After</div>
+
+              <!-- seam + handle -->
+              <div class="demo-seam"></div>
+              <div class="demo-handle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.5 13.2A8.2 8.2 0 1 1 10.8 3.5a6.4 6.4 0 0 0 9.7 9.7Z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- floating popup control -->
+          <div class="popup">
+            <div class="popup-head">
+              <div class="popup-id">
+                <div class="popup-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 13.2A8.2 8.2 0 1 1 10.8 3.5a6.4 6.4 0 0 0 9.7 9.7Z"/></svg>
+                </div>
+                <div class="popup-name">Dark Mode<br>Lite</div>
+              </div>
+              <div class="popup-toggle">
+                <div class="popup-knob"></div>
+              </div>
+            </div>
+            <div class="popup-modes">
+              <div class="popup-mode popup-mode--active">Smart</div>
+              <div class="popup-mode">Invert</div>
+              <div class="popup-mode">Soft</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MARQUEE -->
+    <section class="marquee">
+      <div class="marquee-fade marquee-fade--left"></div>
+      <div class="marquee-fade marquee-fade--right"></div>
+      <div class="marquee-track">
+        <div class="marquee-group">
+          <span>github.com</span><span class="marquee-sep">·</span><span>stripe.com</span><span class="marquee-sep">·</span><span>wikipedia.org</span><span class="marquee-sep">·</span><span>news.ycombinator.com</span><span class="marquee-sep">·</span><span>figma.com</span><span class="marquee-sep">·</span><span>notion.so</span><span class="marquee-sep">·</span><span>arxiv.org</span><span class="marquee-sep">·</span><span>reddit.com</span><span class="marquee-sep">·</span>
+        </div>
+        <div class="marquee-group">
+          <span>github.com</span><span class="marquee-sep">·</span><span>stripe.com</span><span class="marquee-sep">·</span><span>wikipedia.org</span><span class="marquee-sep">·</span><span>news.ycombinator.com</span><span class="marquee-sep">·</span><span>figma.com</span><span class="marquee-sep">·</span><span>notion.so</span><span class="marquee-sep">·</span><span>arxiv.org</span><span class="marquee-sep">·</span><span>reddit.com</span><span class="marquee-sep">·</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES (editorial list) -->
+    <section id="features" class="features">
+      <div class="features-intro">
+        <div class="kicker">What you get</div>
+        <h2 class="features-title">Dark that<br>actually looks<br><span class="serif">good.</span></h2>
+        <p class="features-sub">Not a blunt color invert. Four things that make the difference.</p>
+      </div>
+
+      <div class="feature-list">
+        <div class="feature">
+          <div class="feature-num">01</div>
+          <div>
+            <h3>Smart mode</h3>
+            <p>Reads each page and tunes contrast and brightness for the most natural dark theme — automatically, no fiddling.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-num">02</div>
+          <div>
+            <h3>Saved presets</h3>
+            <p>Reading, Night Owl, or your own. Dial brightness, contrast and sepia once, then reuse the look anywhere.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-num">03</div>
+          <div>
+            <h3>Per-site control</h3>
+            <p>Love a site's own dark theme? Switch Dark Mode Lite off for it with one tap — and it stays that way.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-num">04</div>
+          <div>
+            <h3>Instant, no reload</h3>
+            <p>Every change lands the moment you make it. No refresh, no flash of white, no waiting.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="how">
+      <div class="kicker">Three taps to a darker web</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Install</h3>
+          <p>Add it to Chrome for free. No sign-up, no permissions circus.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Toggle on</h3>
+          <p>Click the icon and flip the switch. The whole page goes dark instantly.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Fine-tune</h3>
+          <p>Nudge brightness or pick a preset. It remembers your choice per site.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIGHT CTA (the wink) -->
+    <section class="cta">
+      <div class="cta-inner">
+        <div class="cta-kicker">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E0A83A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+          This is what your eyes have been putting up with
+        </div>
+        <h2 class="cta-title">Turn the whole web <span class="serif">easy on the eyes.</span></h2>
+        <p class="cta-sub">Free, private, and it works on every site you visit.</p>
+        <div class="cta-actions">
+          <a href="https://chromewebstore.google.com/" target="_blank" rel="noopener" class="btn-dark">Add to Chrome — Free
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
+          <span class="cta-note">No account needed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="brand">
+        <img src="logo-a.svg" width="30" height="30" class="footer-logo" alt="Dark Mode Lite">
+        <span class="footer-name">Dark Mode Lite</span>
+      </div>
+      <div class="footer-credit">
+        <span>Crafted with</span>
+        <span class="heart"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 20.3l-1.4-1.3C5.4 14.3 2.6 11.7 2.6 8.6 2.6 6.1 4.5 4.2 7 4.2c1.4 0 2.8.7 3.7 1.8l1.3 1.5 1.3-1.5c.9-1.1 2.3-1.8 3.7-1.8 2.5 0 4.4 1.9 4.4 4.4 0 3.1-2.8 5.7-8 10.4L12 20.3Z"/></svg></span>
+        <span>by</span>
+        <a href="https://gocanto.sh" target="_blank" rel="noopener" class="footer-link">gocanto.sh</a>
+      </div>
+    </footer>
+
+  </div>
+</div>
+</body>
+</html>

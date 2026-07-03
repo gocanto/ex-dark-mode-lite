@@ -6,6 +6,12 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["dev", "--port", "5178"],
       "port": 5178
+    },
+    {
+      "name": "web-landing",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "5179", "-d", "web"],
+      "port": 5179
     }
   ]
 }

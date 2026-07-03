@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="a_bg" x1="72" y1="48" x2="440" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#15292E"></stop>
+      <stop offset="0.55" stop-color="#0D1C21"></stop>
+      <stop offset="1" stop-color="#081215"></stop>
+    </linearGradient>
+    <linearGradient id="a_moon" x1="150" y1="120" x2="360" y2="410" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5CF6E4"></stop>
+      <stop offset="1" stop-color="#10B3A4"></stop>
+    </linearGradient>
+    <radialGradient id="a_glow" cx="0.46" cy="0.5" r="0.55">
+      <stop offset="0" stop-color="#2FE0CE" stop-opacity="0.5"></stop>
+      <stop offset="1" stop-color="#2FE0CE" stop-opacity="0"></stop>
+    </radialGradient>
+    <mask id="a_cres">
+      <rect x="0" y="0" width="512" height="512" fill="#000"></rect>
+      <circle cx="242" cy="266" r="150" fill="#fff"></circle>
+      <circle cx="320" cy="206" r="140" fill="#000"></circle>
+    </mask>
+  </defs>
+
+  <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#a_bg)"></rect>
+  <rect x="2.5" y="2.5" width="507" height="507" rx="117.5" fill="none" stroke="#2FE0CE" stroke-opacity="0.22" stroke-width="3"></rect>
+
+  <ellipse cx="238" cy="262" rx="185" ry="185" fill="url(#a_glow)"></ellipse>
+
+  <rect x="0" y="0" width="512" height="512" fill="url(#a_moon)" mask="url(#a_cres)"></rect>
+
+  <path d="M366 132 L375.5 158 L401 167.5 L375.5 177 L366 203 L356.5 177 L331 167.5 L356.5 158 Z" fill="#D3FBF4"></path>
+  <circle cx="322" cy="238" r="7.5" fill="#D3FBF4" fill-opacity="0.9"></circle>
+</svg>
