@@ -82,6 +82,8 @@ Apply and adjust a dark-mode theme to web pages that do not offer one.
 - Does the extension collect user data? **No.**
 - Not sold to third parties, not used for unrelated purposes, not used for
   creditworthiness/lending.
+- Privacy policy URL: https://github.com/gocanto/ex-dark-mode-lite/blob/main/PRIVACY.md
+  (see [`PRIVACY.md`](../PRIVACY.md); resolves once merged to `main`).
 
 ## Assets
 
@@ -93,6 +95,7 @@ Located in [`storage/`](../storage):
 | Screenshot — modes | `screenshot-modes.png` |
 | Screenshot — per-site toggle | `screenshot-site-toggle.png` |
 | Small promo tile (440×280) | `promo-440x280.png` |
+| Marquee promo tile (1400×560) | `promo-marquee-1400x560.png` |
 | Store icon (128×128) | `icon-128.png` |
 | Social — X / LinkedIn | `social/` |
 
