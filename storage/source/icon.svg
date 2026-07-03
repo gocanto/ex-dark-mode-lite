@@ -20,13 +20,17 @@
 		</clipPath>
 	</defs>
 
-	<rect x="0" y="0" width="512" height="512" rx="120" fill="url(#b_bg)" />
-	<rect x="2.5" y="2.5" width="507" height="507" rx="117.5" fill="none" stroke="#2FE0CE" stroke-opacity="0.22" stroke-width="3" />
+	<!-- Inset the whole tile so the toolbar icon keeps a transparent safe-area
+	     margin instead of rendering edge-to-edge. -->
+	<g transform="translate(51.2 51.2) scale(0.8)">
+		<rect x="0" y="0" width="512" height="512" rx="120" fill="url(#b_bg)" />
+		<rect x="2.5" y="2.5" width="507" height="507" rx="117.5" fill="none" stroke="#2FE0CE" stroke-opacity="0.22" stroke-width="3" />
 
-	<ellipse cx="256" cy="256" rx="180" ry="180" fill="url(#b_glow)" />
+		<ellipse cx="256" cy="256" rx="180" ry="180" fill="url(#b_glow)" />
 
-	<circle cx="256" cy="256" r="134" fill="url(#b_fill)" clip-path="url(#b_right)" />
-	<circle cx="256" cy="256" r="134" fill="none" stroke="url(#b_fill)" stroke-width="20" />
+		<circle cx="256" cy="256" r="134" fill="url(#b_fill)" clip-path="url(#b_right)" />
+		<circle cx="256" cy="256" r="134" fill="none" stroke="url(#b_fill)" stroke-width="20" />
 
-	<path d="M372 118 L380.5 141 L403 149.5 L380.5 158 L372 181 L363.5 158 L341 149.5 L363.5 141 Z" fill="#D3FBF4" />
+		<path d="M372 118 L380.5 141 L403 149.5 L380.5 158 L372 181 L363.5 158 L341 149.5 L363.5 141 Z" fill="#D3FBF4" />
+	</g>
 </svg>

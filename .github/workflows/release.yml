@@ -1,0 +1,138 @@
+name: Release to Chrome Web Store
+
+# Manual, opt-in publish. Running this workflow always builds and validates the
+# store package and uploads it to the existing Chrome Web Store item as a draft.
+# It only submits the draft for review when `publish` is set to `publish`, so a
+# plain run is safe: it stages the new version without making it public.
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   CWS_EXTENSION_ID  - the item id from the Web Store dashboard URL
+#   CWS_CLIENT_ID     - OAuth client id (Google Cloud project)
+#   CWS_CLIENT_SECRET - OAuth client secret
+#   CWS_REFRESH_TOKEN - OAuth refresh token with the chromewebstore scope
+# See docs/chrome-web-store.md for how to obtain these.
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Upload only (draft) or upload + submit for review'
+        type: choice
+        default: draft-only
+        options:
+          - draft-only
+          - publish
+
+concurrency:
+  group: cws-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: chrome-web-store
+    env:
+      CWS_EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+      CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+      CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+      CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+    steps:
+      - name: Verify required secrets
+        run: |
+          missing=""
+          for name in CWS_EXTENSION_ID CWS_CLIENT_ID CWS_CLIENT_SECRET CWS_REFRESH_TOKEN; do
+            if [ -z "${!name}" ]; then missing="$missing $name"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::error title=Missing secrets::Set these repository secrets before releasing:$missing"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build and package the store zip
+        env:
+          STORE_RELEASES_DIR: ${{ github.workspace }}/release
+        run: pnpm run package:store
+
+      - name: Resolve package path
+        id: pkg
+        run: |
+          zip=$(ls "${{ github.workspace }}/release"/*.zip | head -1)
+          if [ ! -f "$zip" ]; then
+            echo "::error title=No package::package:store did not produce a zip" && exit 1
+          fi
+          echo "zip=$zip" >> "$GITHUB_OUTPUT"
+          echo "Packaged: $zip"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-web-store-package
+          path: ${{ steps.pkg.outputs.zip }}
+          if-no-files-found: error
+
+      - name: Exchange refresh token for access token
+        id: token
+        run: |
+          resp=$(curl -sS -X POST https://oauth2.googleapis.com/token \
+            -d "client_id=${CWS_CLIENT_ID}" \
+            -d "client_secret=${CWS_CLIENT_SECRET}" \
+            -d "refresh_token=${CWS_REFRESH_TOKEN}" \
+            -d "grant_type=refresh_token")
+          token=$(echo "$resp" | jq -r '.access_token // empty')
+          if [ -z "$token" ]; then
+            echo "::error title=Auth failed::$(echo "$resp" | jq -r '.error_description // .error // "unknown error"')"
+            exit 1
+          fi
+          echo "::add-mask::$token"
+          echo "token=$token" >> "$GITHUB_OUTPUT"
+
+      - name: Upload package to the Web Store item (draft)
+        run: |
+          resp=$(curl -sS \
+            -H "Authorization: Bearer ${{ steps.token.outputs.token }}" \
+            -H "x-goog-api-version: 2" \
+            -X PUT -T "${{ steps.pkg.outputs.zip }}" \
+            "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${CWS_EXTENSION_ID}")
+          echo "$resp"
+          state=$(echo "$resp" | jq -r '.uploadState // empty')
+          if [ "$state" != "SUCCESS" ]; then
+            echo "::error title=Upload failed::$(echo "$resp" | jq -c '.itemError // .error // .')"
+            exit 1
+          fi
+          echo "Draft updated for item ${CWS_EXTENSION_ID}."
+
+      - name: Submit for review
+        if: ${{ inputs.publish == 'publish' }}
+        run: |
+          resp=$(curl -sS \
+            -H "Authorization: Bearer ${{ steps.token.outputs.token }}" \
+            -H "x-goog-api-version: 2" \
+            -H "Content-Length: 0" \
+            -X POST \
+            "https://www.googleapis.com/chromewebstore/v1.1/items/${CWS_EXTENSION_ID}/publish")
+          echo "$resp"
+          if echo "$resp" | jq -e '.status | index("OK") // (length == 0)' >/dev/null 2>&1; then
+            echo "Submitted for review."
+          else
+            echo "::error title=Publish failed::$(echo "$resp" | jq -c '.status // .error // .')"
+            exit 1
+          fi
+
+      - name: Summary
+        if: ${{ always() }}
+        run: |
+          echo "### Chrome Web Store release" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Item: \`${CWS_EXTENSION_ID}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Mode: \`${{ inputs.publish }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Package: \`$(basename "${{ steps.pkg.outputs.zip }}")\`" >> "$GITHUB_STEP_SUMMARY"

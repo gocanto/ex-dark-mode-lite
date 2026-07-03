@@ -21,7 +21,17 @@ fixes) or crude (a blunt `invert()` over everything). **Dark Mode Lite** aims fo
 small enough to read and audit in an afternoon, but smart enough to look good on real pages.
 It's a compact, hackable extension — not a Dark Reader clone.
 
-## Install (from source)
+## Install
+
+### From the Chrome Web Store
+
+[**Add to Chrome**](https://chromewebstore.google.com/) — _(listing link pending first
+publish; see [docs/chrome-web-store.md](docs/chrome-web-store.md))._
+
+The store build ships only the extension itself — the popup, content script, icons, and
+manifest. Marketing assets in [`storage/`](storage) are kept out of the packaged zip.
+
+### From source
 
 ```bash
 pnpm install
@@ -63,15 +73,19 @@ pnpm build          # build the loadable extension into dist/
 pnpm test           # run unit/feature tests (Vitest)
 pnpm typecheck      # vue-tsc type check
 pnpm check          # paths + tests + typecheck + build (run before pushing)
+pnpm package:store  # build + validate + zip the Chrome Web Store package
 pnpm format-all     # format the whole tree
 ```
+
+Releasing to the Chrome Web Store (packaging and the automated publish workflow) is
+documented in [docs/chrome-web-store.md](docs/chrome-web-store.md).
 
 `pnpm dev` runs the popup standalone (no extension runtime) at the server root (`/`), so it
 renders in "Live preview" mode against default settings — handy for iterating on the UI.
 
 ### Project layout
 
-```
+```text
 index.html                       # popup entry (Vite root entry)
 public/
   manifest.json                  # MV3 manifest (copied verbatim into dist/)
