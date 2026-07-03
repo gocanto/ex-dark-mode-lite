@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Moon } from '@lucide/vue';
 import { Switch } from '@components/ui/switch';
 
 defineProps<{
@@ -25,7 +24,14 @@ const emit = defineEmits<{
 						inset 0 1px 0 rgba(255, 255, 255, 0.06);
 				"
 			>
-				<Moon class="size-[18px]" :stroke-width="1.7" aria-hidden="true" />
+				<svg class="size-[18px]" viewBox="0 0 512 512" fill="none" aria-hidden="true">
+					<defs>
+						<clipPath id="dmlDiscRight"><rect x="256" y="80" width="200" height="352" /></clipPath>
+					</defs>
+					<circle cx="256" cy="256" r="134" fill="currentColor" clip-path="url(#dmlDiscRight)" />
+					<circle cx="256" cy="256" r="134" fill="none" stroke="currentColor" stroke-width="20" />
+					<path d="M372 118 L380.5 141 L403 149.5 L380.5 158 L372 181 L363.5 158 L341 149.5 L363.5 141 Z" fill="currentColor" />
+				</svg>
 			</div>
 			<div class="min-w-0">
 				<h1 class="truncate text-[14.5px] font-semibold tracking-tight">Dark Mode Lite</h1>

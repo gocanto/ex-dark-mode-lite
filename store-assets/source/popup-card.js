@@ -10,7 +10,7 @@
 		'<div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 15px;position:relative;">' +
 		'<div style="display:flex;align-items:center;gap:11px;">' +
 		'<div style="width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#123430,#0E211F);border:1px solid rgba(35,213,195,.32);color:#2FE0CE;box-shadow:0 0 14px rgba(35,213,195,.22),inset 0 1px 0 rgba(255,255,255,.06);">' +
-		'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 13.2A8.2 8.2 0 1 1 10.8 3.5a6.4 6.4 0 0 0 9.7 9.7Z"/></svg>' +
+		'<svg width="18" height="18" viewBox="0 0 512 512" fill="none"><defs><clipPath id="dmlHdrDisc"><rect x="256" y="80" width="200" height="352"/></clipPath></defs><circle cx="256" cy="256" r="134" fill="currentColor" clip-path="url(#dmlHdrDisc)"/><circle cx="256" cy="256" r="134" fill="none" stroke="currentColor" stroke-width="20"/><path d="M372 118 L380.5 141 L403 149.5 L380.5 158 L372 181 L363.5 158 L341 149.5 L363.5 141 Z" fill="currentColor"/></svg>' +
 		'</div>' +
 		'<div><div style="font-size:14.5px;font-weight:600;letter-spacing:-.01em;color:#EAEEF4;line-height:1.1;">Dark Mode Lite</div>' +
 		'<div style="display:flex;align-items:center;gap:6px;margin-top:4px;"><span style="width:6px;height:6px;border-radius:50%;background:#2FE0CE;box-shadow:0 0 6px rgba(47,224,206,.85);"></span><span style="font-size:11px;color:#8B95A4;">Live preview</span></div></div>' +
