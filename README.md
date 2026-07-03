@@ -2,6 +2,10 @@
 
 A compact Chrome (MV3) extension that adds a real dark mode to sites that don't ship one.
 
+<p align="center">
+  <img src="storage/promo-marquee-1400x560.png" alt="Dark Mode — Lite: dark mode for every site, with smart per-page tuning, saved presets, and per-site control" width="100%">
+</p>
+
 ## What it does
 
 - **Global + per‑site toggle** — turn dark mode on everywhere, then keep a per‑site
