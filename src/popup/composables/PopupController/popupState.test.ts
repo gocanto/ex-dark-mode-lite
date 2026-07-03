@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { DEFAULT_SETTINGS } from '@/types/settings';
 import { PopupStateBuilder } from '@composables/PopupController/popupState';
 

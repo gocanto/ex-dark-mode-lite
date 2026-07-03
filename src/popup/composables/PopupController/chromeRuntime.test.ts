@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { DEFAULT_SETTINGS, EXTENSION_MESSAGE_SOURCE } from '@/types/settings';
 import { ChromeRuntimeAdapter, ContentScriptInjectionFailed, NoActiveTab, TabMessageFailed, type ChromeRuntimeApi } from '@composables/PopupController/chromeRuntime';
 

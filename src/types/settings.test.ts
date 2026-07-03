@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { BUILT_IN_PRESETS, DEFAULT_SETTINGS, EXTENSION_MESSAGE_SOURCE, SettingsCodec } from '@/types/settings';
 
 describe('settings parsers', () => {
