@@ -1,29 +1,15 @@
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
-import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite-plus';
 
 const sourceRoot = resolve(__dirname, 'src');
-const popupHtmlEntry = resolve(__dirname, 'popup/index.html');
+const popupHtmlEntry = resolve(__dirname, 'index.html');
 const contentScriptEntry = resolve(sourceRoot, 'content.ts');
-const contentScriptOutput = 'src/content.js';
+const contentScriptOutput = 'content.js';
 
 export default defineConfig({
-	plugins: [
-		vue(),
-		tailwindcss(),
-		{
-			name: 'extension-manifest',
-			generateBundle() {
-				this.emitFile({
-					type: 'asset',
-					fileName: 'manifest.json',
-					source: readFileSync(resolve(__dirname, 'manifest.json'), 'utf8'),
-				});
-			},
-		},
-	],
+	plugins: [vue(), tailwindcss()],
 	resolve: {
 		alias: {
 			'@': sourceRoot,

@@ -66,12 +66,16 @@ pnpm check          # paths + tests + typecheck + build (run before pushing)
 pnpm format-all     # format the whole tree
 ```
 
-`pnpm dev` runs the popup standalone (no extension runtime), so it renders in "Live preview"
-mode against default settings — handy for iterating on the UI.
+`pnpm dev` runs the popup standalone (no extension runtime) at the server root (`/`), so it
+renders in "Live preview" mode against default settings — handy for iterating on the UI.
 
 ### Project layout
 
 ```
+index.html                       # popup entry (Vite root entry)
+public/
+  manifest.json                  # MV3 manifest (copied verbatim into dist/)
+  icons/                         # extension icons (16/32/48/128)
 src/
   content.ts                     # page dark-mode engine (ContentScript class)
   types/settings.ts              # shared Settings model + SettingsCodec
@@ -79,7 +83,7 @@ src/
     App.vue                      # popup root
     components/                  # UI (popup sections + shadcn-vue primitives)
     composables/PopupController/ # controller, runtime adapter, settings gateway
-manifest.json                    # MV3 manifest
+storage/                         # Chrome Web Store assets (screenshots, promo art) — not shipped
 ```
 
 ## Contributing

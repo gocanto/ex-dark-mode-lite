@@ -117,7 +117,7 @@ export class ChromeRuntimeAdapter {
 		try {
 			await this.runtime?.scripting?.executeScript({
 				target: { tabId, allFrames: true },
-				files: ['src/content.js'],
+				files: ['content.js'],
 			});
 
 			return Results.ok(undefined);
