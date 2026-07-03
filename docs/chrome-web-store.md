@@ -43,12 +43,31 @@ The extension does not request `tabs`. The popup only needs the active tab after
 
 ## Required Listing Assets
 
-- Store icon: `store-assets/icon-128.png`
-- Small promo tile: `store-assets/promo-440x280.png`
-- Screenshots:
-  - `store-assets/screenshot-controls.png`
-  - `store-assets/screenshot-modes.png`
-  - `store-assets/screenshot-site-toggle.png`
+All listing assets share the "Contrast disc" brand system (teal `#2FE0CE` on a dark
+`#080B10` field, Geist typography). Editable sources live in `store-assets/source/`.
+
+- Store icon: `store-assets/icon-128.png` (from `store-assets/source/icon.svg`, rasterized with `rsvg-convert`; also feeds `public/icons/icon-{16,32,48,128}.png`)
+- Small promo tile: `store-assets/promo-440x280.png` (from `store-assets/source/promo-440x280.html`)
+- Screenshots (1280×800):
+  - `store-assets/screenshot-controls.png` (from `store-assets/source/screenshot-controls.html`)
+  - `store-assets/screenshot-modes.png` (from `store-assets/source/screenshot-modes.html`)
+  - `store-assets/screenshot-site-toggle.png` (from `store-assets/source/screenshot-site-toggle.html`)
+
+## Social / Marketing Assets
+
+Not part of the store listing, but kept alongside it for launch posts:
+
+- LinkedIn (1200×1200): `store-assets/social/linkedin-1200x1200.png` (from `store-assets/source/linkedin-post.html`)
+- X (1600×900): `store-assets/social/x-1600x900.png` (from `store-assets/source/x-post.html`)
+
+### Regenerating the HTML-based assets
+
+The promo, screenshots, and social posts are authored as self-contained HTML
+(shared `store-assets/source/brand.css`, bundled Geist fonts in
+`store-assets/source/fonts/`, and the shared popup mockup in
+`store-assets/source/popup-card.js`). To re-render, serve `store-assets/source/`
+over HTTP and screenshot each page at its exact viewport with headless Chromium
+(e.g. Playwright), then save the PNG into `store-assets/` (or `store-assets/social/`).
 
 ## Package
 

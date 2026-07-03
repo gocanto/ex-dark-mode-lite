@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="brand.css">
+</head>
+<body>
+<div style="width:1200px;height:1200px;position:relative;overflow:hidden;background:#080B10;font-family:'Geist',ui-sans-serif,system-ui,-apple-system,sans-serif;">
+
+  <div style="position:absolute;right:-160px;top:52%;transform:translateY(-50%);width:820px;height:820px;background:radial-gradient(circle at center,rgba(35,213,195,.16),transparent 62%);pointer-events:none;"></div>
+  <div style="position:absolute;left:-160px;top:-180px;width:600px;height:600px;background:radial-gradient(circle at center,rgba(70,130,170,.11),transparent 66%);pointer-events:none;"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(130% 120% at 50% 50%,transparent 50%,rgba(0,0,0,.55));pointer-events:none;"></div>
+
+  <div style="position:relative;z-index:1;height:100%;display:flex;align-items:center;padding:0 56px 0 84px;">
+
+    <!-- left: copy -->
+    <div style="width:600px;display:flex;flex-direction:column;">
+
+      <div style="display:flex;align-items:center;gap:15px;margin-bottom:46px;">
+        <img src="icon.svg" width="60" height="60" style="display:block;border-radius:15px;box-shadow:0 0 22px rgba(35,213,195,.28);" alt="Dark Mode Lite">
+        <div>
+          <div style="font-size:24px;font-weight:600;letter-spacing:-.01em;color:#EAEEF4;line-height:1.1;">Dark Mode Lite</div>
+          <div style="font-size:14.5px;color:#7E8998;margin-top:3px;">Chrome extension · gocanto.sh</div>
+        </div>
+      </div>
+
+      <div style="font-size:70px;font-weight:700;letter-spacing:-.03em;line-height:1.0;color:#F3F6FA;">Dark mode for<br><span style="color:#2FE0CE;">every site.</span></div>
+
+      <div style="font-size:21px;line-height:1.5;color:#98A3B2;max-width:470px;margin-top:24px;">Smart per-page tuning, saved presets, and per-site control — all in one tap.</div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;">
+        <div style="display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:#12171F;border:1px solid rgba(255,255,255,.08);font-size:14.5px;color:#AEB7C4;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#2FE0CE;"></span>Smart mode</div>
+        <div style="display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:#12171F;border:1px solid rgba(255,255,255,.08);font-size:14.5px;color:#AEB7C4;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#7C8CF8;"></span>Presets</div>
+        <div style="display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:#12171F;border:1px solid rgba(255,255,255,.08);font-size:14.5px;color:#AEB7C4;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#B084F5;"></span>Per-site control</div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:16px;margin-top:40px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:15px 24px;border-radius:14px;background:linear-gradient(180deg,#2FE6D3,#16BEAD);color:#042420;font-size:18px;font-weight:700;box-shadow:0 12px 30px -8px rgba(35,213,195,.5);">Add to Chrome — Free
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        </div>
+        <div style="font-size:14.5px;color:#6C7686;">No account needed</div>
+      </div>
+    </div>
+
+    <!-- right: popup hero -->
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+      <div style="transform:scale(1.18);transform-origin:center;">
+        <div data-dml-popup data-highlight="none"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script src="popup-card.js"></script>
+</body>
+</html>
