@@ -10,7 +10,8 @@
     "preview": "vp preview --host 127.0.0.1",
     "test": "vp test run",
     "test:coverage": "vp test run --coverage",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "package:store": "pnpm -w run package:store"
   },
   "dependencies": {
     "@dml/ui": "workspace:*",

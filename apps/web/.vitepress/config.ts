@@ -60,6 +60,20 @@ export default defineConfig({
 	// copies of the Plugin type disagree — the cast bridges that identity mismatch, nothing else.
 	vite: {
 		plugins: [tailwindcss()],
+		build: {
+			rollupOptions: {
+				// @vueuse/core (a transitive VitePress dep) ships mispositioned
+				// /* #__PURE__ */ annotations. Rollup safely strips them; silence the
+				// cosmetic INVALID_ANNOTATION noise so release builds stay clean.
+				onwarn(warning, defaultHandler) {
+					if (warning.code === 'INVALID_ANNOTATION' && warning.message.includes('#__PURE__')) {
+						return;
+					}
+
+					defaultHandler(warning);
+				},
+			},
+		},
 		resolve: {
 			alias: {
 				'@web': resolve(__dirname, '..', 'src'),
