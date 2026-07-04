@@ -3,6 +3,11 @@ import { resolve } from 'node:path';
 import { defineConfig, type HeadConfig, type UserConfig } from 'vitepress';
 import { AUTHOR_URL, SITE_DESCRIPTION, SITE_OG_DESCRIPTION, SITE_TITLE, SITE_URL } from '#web/config/site';
 
+// Minimal shape of a Rollup build warning — only the fields the onwarn filter
+// below reads. Declared locally because `rollup` isn't a resolvable bare import
+// from this package (it's a nested transitive dep of Vite/VitePress).
+type RollupWarning = { code?: string; message: string };
+
 const OG_IMAGE_URL = `${SITE_URL}/og-image.png`;
 const GOOGLE_FONTS_URL = 'https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap';
 
@@ -60,6 +65,22 @@ export default defineConfig({
 	// copies of the Plugin type disagree — the cast bridges that identity mismatch, nothing else.
 	vite: {
 		plugins: [tailwindcss()],
+		build: {
+			rollupOptions: {
+				// @vueuse/core (a transitive VitePress dep) ships mispositioned
+				// /* #__PURE__ */ annotations. Rollup safely strips them; silence the
+				// cosmetic INVALID_ANNOTATION noise so release builds stay clean.
+				// Params are typed inline because `rollup` isn't a resolvable bare
+				// import here and the surrounding `vite` object is cast (see below).
+				onwarn(warning: RollupWarning, defaultHandler: (warning: RollupWarning) => void) {
+					if (warning.code === 'INVALID_ANNOTATION' && warning.message.includes('#__PURE__')) {
+						return;
+					}
+
+					defaultHandler(warning);
+				},
+			},
+		},
 		resolve: {
 			alias: {
 				'@web': resolve(__dirname, '..', 'src'),
