@@ -1,0 +1,76 @@
+name: GitHub Release
+
+# Publishes the built Chrome Web Store zip as a downloadable GitHub Release
+# asset. Cut a release by pushing a version tag (e.g. `v0.1.0`), typically right
+# after the version bump is merged to `main`.
+#
+# The tag is a git ref, not the `main` branch, so this workflow does not add a
+# job to `main` (see AGENTS.md). The build reuses `pnpm run package:store`, which
+# validates the extension against StorePackagePolicy and writes
+# `release/dark-mode-lite-<version>.zip`.
+on:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: github-release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write # required to create the release and upload assets
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Verify tag matches the extension manifest version
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          manifest_version=$(jq -r '.version' apps/extension/public/manifest.json)
+          if [ "$tag_version" != "$manifest_version" ]; then
+            echo "::error title=Version mismatch::tag ${GITHUB_REF_NAME} does not match manifest version ${manifest_version}"
+            exit 1
+          fi
+          echo "Tag ${GITHUB_REF_NAME} matches manifest version ${manifest_version}."
+
+      - name: Build and package the store zip
+        env:
+          STORE_RELEASES_DIR: ${{ github.workspace }}/release
+        run: pnpm run package:store
+
+      - name: Resolve package path
+        id: pkg
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          zip="${{ github.workspace }}/release/dark-mode-lite-${tag_version}.zip"
+          if [ ! -f "$zip" ]; then
+            echo "::error title=No package::expected package $zip was not produced" && exit 1
+          fi
+          echo "zip=$zip" >> "$GITHUB_OUTPUT"
+          echo "Packaged: $zip"
+
+      - name: Create GitHub Release and attach the zip
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.pkg.outputs.zip }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+
+      - name: Summary
+        if: ${{ always() }}
+        run: |
+          echo "### GitHub Release" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Tag: \`${GITHUB_REF_NAME}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Package: \`$(basename "${{ steps.pkg.outputs.zip }}")\`" >> "$GITHUB_STEP_SUMMARY"
