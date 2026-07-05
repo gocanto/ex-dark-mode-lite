@@ -16,7 +16,7 @@ export const SITE_DESCRIPTION =
 export const SITE_OG_DESCRIPTION = 'A free Chrome extension that rewrites each page as you land on it — matching contrast to content, not just flipping colors.';
 
 /** Chrome Web Store listing URL. */
-export const CHROME_STORE_URL = 'https://chromewebstore.google.com/';
+export const CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/oagcdogefhdjdgbfbgbjcjlpofbnappi';
 
 /** Author site linked from the nav and footer. */
 export const AUTHOR_URL = 'https://gocanto.sh';

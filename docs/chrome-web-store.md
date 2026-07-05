@@ -4,6 +4,12 @@ How to package **Dark Mode — Lite** and ship it to the Chrome Web Store — bo
 one-command packaging step and the automated publish workflow, plus a manual
 dashboard fallback.
 
+> **Live listing:** the extension is published at
+> <https://chromewebstore.google.com/detail/oagcdogefhdjdgbfbgbjcjlpofbnappi>
+> (item ID `oagcdogefhdjdgbfbgbjcjlpofbnappi`, used as `CWS_EXTENSION_ID`). The listing
+> now exists, so subsequent releases only ever **update** it — see the automated
+> workflow below.
+
 ## What gets shipped
 
 `pnpm package:store` builds the extension and zips **only** the runtime files the

@@ -29,8 +29,9 @@ It's a compact, hackable extension — not a Dark Reader clone.
 
 ### From the Chrome Web Store
 
-[**Add to Chrome**](https://chromewebstore.google.com/) — _(listing link pending first
-publish; see [docs/chrome-web-store.md](docs/chrome-web-store.md))._
+[**Add to Chrome**](https://chromewebstore.google.com/detail/oagcdogefhdjdgbfbgbjcjlpofbnappi) —
+free, no account, no tracking. Packaging and the publish workflow are documented in
+[docs/chrome-web-store.md](docs/chrome-web-store.md).
 
 The store build ships only the extension itself — the popup, content script, icons, and
 manifest. Marketing assets in [`storage/`](storage) are kept out of the packaged zip.

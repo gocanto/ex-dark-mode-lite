@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'node:path';
 import { defineConfig, type HeadConfig, type UserConfig } from 'vitepress';
-import { AUTHOR_URL, SITE_DESCRIPTION, SITE_OG_DESCRIPTION, SITE_TITLE, SITE_URL } from '#web/config/site';
+import { AUTHOR_URL, CHROME_STORE_URL, SITE_DESCRIPTION, SITE_OG_DESCRIPTION, SITE_TITLE, SITE_URL } from '#web/config/site';
 
 // Minimal shape of a Rollup build warning — only the fields the onwarn filter
 // below reads. Declared locally because `rollup` isn't a resolvable bare import
@@ -20,6 +20,8 @@ const JSON_LD = JSON.stringify({
 	image: OG_IMAGE_URL,
 	applicationCategory: 'BrowserApplication',
 	operatingSystem: 'Chrome',
+	installUrl: CHROME_STORE_URL,
+	downloadUrl: CHROME_STORE_URL,
 	offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
 	author: { '@type': 'Person', name: 'Gustavo Ocanto', url: AUTHOR_URL },
 });
