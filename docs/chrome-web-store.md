@@ -66,6 +66,32 @@ STORE_RELEASES_DIR=/tmp/cws pnpm package:store
 The `<version>` comes from `public/manifest.json`. Bump it there before cutting a new
 release — the store rejects re-uploads of an already-published version.
 
+## Trust and compliance audit
+
+Chrome's Enhanced Safe Browsing warning is not controlled by a manifest flag. Before
+uploading a new package, verify the extension and publisher state are aligned with the
+Chrome Web Store trust requirements:
+
+- **Single purpose** — the listing must state one clear purpose: apply and adjust a
+  dark-mode theme to web pages that do not offer one.
+- **Permissions** — keep `storage`, `activeTab`, `scripting`, and the broad
+  `http://*/*` / `https://*/*` host permissions documented in
+  [`store-listing.md`](store-listing.md). Broad host access is required because the
+  content script must run on arbitrary sites the user chooses to darken.
+- **Privacy** — the listing and privacy policy must continue to state that there are
+  no analytics, no accounts, no network requests to the publisher or third parties,
+  and that settings remain in Chrome's `storage.sync`.
+- **Open source** — keep the listing and manifest pointed at the public GitHub
+  repository: <https://github.com/gocanto/ex-dark-mode-lite>.
+- **Publisher account** — confirm 2-Step Verification is enabled, publisher/contact
+  details are current, and there are no unresolved Chrome Web Store policy violations.
+- **Package drift** — run `pnpm package:store` and rely on the package policy check to
+  block unexpected manifest changes, including the disallowed `tabs` permission.
+
+If the warning remains after review approval and these checks pass, treat it as Chrome's
+developer/item trust-age state and monitor future installs instead of changing
+functionality blindly.
+
 ## Automated publish (GitHub Actions)
 
 The [`Release to Chrome Web Store`](../.github/workflows/release.yml) workflow packages
@@ -105,6 +131,7 @@ secrets fails fast at the first step with a clear message.
 ## Releasing: checklist
 
 - [ ] Bump `version` in `public/manifest.json`.
+- [ ] Complete the trust and compliance audit above.
 - [ ] `pnpm check` is green.
 - [ ] `pnpm package:store` succeeds (policy passes).
 - [ ] Listing copy in [`store-listing.md`](store-listing.md) is current.
