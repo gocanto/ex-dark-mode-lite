@@ -75,6 +75,8 @@ Chrome Web Store trust requirements:
 - **Privacy** — the listing and privacy policy must continue to state that there are
   no analytics, no accounts, no network requests to the publisher or third parties,
   and that settings remain in Chrome's `storage.sync`.
+- **Open source** — keep the listing and manifest pointed at the public GitHub
+  repository: <https://github.com/gocanto/ex-dark-mode-lite>.
 - **Publisher account** — confirm 2-Step Verification is enabled, publisher/contact
   details are current, and there are no unresolved Chrome Web Store policy violations.
 - **Package drift** — run `pnpm package:store` and rely on the package policy check to
