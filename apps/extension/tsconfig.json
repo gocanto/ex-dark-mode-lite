@@ -8,9 +8,11 @@
       "@popup/*": ["src/popup/*"],
       "@components/*": ["src/popup/components/*"],
       "@composables/*": ["src/popup/composables/*"],
+      "@content/*": ["src/content/*"],
+      "@controller/*": ["src/controller/*"],
       "@lib/*": ["src/lib/*"],
       "@types/*": ["src/types/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts", "vitest.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts", "vite.content.config.ts", "vite.controller.config.ts", "vitest.config.ts"]
 }

@@ -16,6 +16,8 @@ export default defineConfig({
 			'@popup': resolve(sourceRoot, 'popup'),
 			'@components': resolve(sourceRoot, 'popup/components'),
 			'@composables': resolve(sourceRoot, 'popup/composables'),
+			'@content': resolve(sourceRoot, 'content'),
+			'@controller': resolve(sourceRoot, 'controller'),
 			'@lib': resolve(sourceRoot, 'lib'),
 			'@types': resolve(sourceRoot, 'types'),
 		},

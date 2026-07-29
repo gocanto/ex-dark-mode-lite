@@ -11,21 +11,26 @@
   "scripts": {
     "dev": "pnpm --filter dark-mode-lite dev",
     "build": "pnpm --filter dark-mode-lite build",
+    "build:controller": "pnpm --filter dark-mode-lite build:controller",
+    "sync:safari": "pnpm run build:controller && node scripts/sync-safari-controller.ts",
     "preview": "pnpm --filter dark-mode-lite preview",
     "dev:web": "pnpm --filter @dml/web dev",
     "build:web": "pnpm --filter @dml/web build",
     "preview:web": "pnpm --filter @dml/web preview",
     "test": "pnpm --filter dark-mode-lite test",
     "test:coverage": "pnpm --filter dark-mode-lite test:coverage",
-    "typecheck": "pnpm -r typecheck && tsc -p tsconfig.json --noEmit",
+    "typecheck": "pnpm -r typecheck && tsc -p tsconfig.json --noEmit && tsc -p e2e/tsconfig.json --noEmit",
     "check:paths": "node scripts/check-paths.ts",
-    "check": "pnpm run check:paths && pnpm run test && pnpm run typecheck && pnpm run build && pnpm run build:web",
+    "check": "pnpm run check:paths && pnpm run test && pnpm run typecheck && pnpm run build && pnpm run build:controller && pnpm run build:web",
     "package:store": "node scripts/package-store.ts",
+    "package:controllers": "node scripts/package-controller-extensions.ts",
+    "e2e": "pnpm run package:controllers && playwright test",
     "format": "node scripts/format.ts changed",
     "format-all": "node scripts/format.ts all"
   },
   "devDependencies": {
     "@dml/tsconfig": "workspace:*",
+    "@playwright/test": "catalog:",
     "@types/node": "catalog:",
     "typescript": "catalog:",
     "vue": "catalog:"

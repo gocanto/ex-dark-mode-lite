@@ -1,0 +1,730 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BA4C20343019AB0B0099D458 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4C20333019AB0B0099D458 /* AppDelegate.swift */; };
+		BA4C203A3019AB0B0099D458 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = BA4C20393019AB0B0099D458 /* Icon.png */; };
+		BA4C20453019AB0C0099D458 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA4C20443019AB0C0099D458 /* Assets.xcassets */; };
+		BA4C204C3019AB0C0099D458 /* Dark Mode Lite Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BA4C204B3019AB0C0099D458 /* Dark Mode Lite Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BA4C20513019AB0C0099D458 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4C20503019AB0C0099D458 /* SafariWebExtensionHandler.swift */; };
+		BA4C20613019AB0C0099D458 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = BA4C205D3019AB0C0099D458 /* background.js */; };
+		BA4C20623019AB0C0099D458 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = BA4C205E3019AB0C0099D458 /* icons */; };
+		BA4C20633019AB0C0099D458 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = BA4C205F3019AB0C0099D458 /* manifest.json */; };
+		BA4C20643019AB0C0099D458 /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = BA4C20603019AB0C0099D458 /* content.js */; };
+		D20000013019AB0B0099D458 /* ControllerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000013019AB0B0099D458 /* ControllerModels.swift */; };
+		D20000023019AB0B0099D458 /* SettingsNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000023019AB0B0099D458 /* SettingsNormalizer.swift */; };
+		D20000033019AB0B0099D458 /* ManagedTabState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000033019AB0B0099D458 /* ManagedTabState.swift */; };
+		D20000043019AB0B0099D458 /* ControllerWireProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000043019AB0B0099D458 /* ControllerWireProtocol.swift */; };
+		D20000053019AB0B0099D458 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000053019AB0B0099D458 /* SettingsStore.swift */; };
+		D20000063019AB0B0099D458 /* BridgeServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000063019AB0B0099D458 /* BridgeServer.swift */; };
+		D20000073019AB0B0099D458 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000073019AB0B0099D458 /* AppModel.swift */; };
+		D20000083019AB0B0099D458 /* ControllerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000083019AB0B0099D458 /* ControllerView.swift */; };
+		D20000093019AB0B0099D458 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000093019AB0B0099D458 /* StatusBarController.swift */; };
+		D200000A3019AB0B0099D458 /* SafariExtensionBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = D100000D3019AB0B0099D458 /* SafariExtensionBridge.m */; };
+		E20000013019AB0B0099D458 /* ControllerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10000023019AB0B0099D458 /* ControllerUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BA4C204D3019AB0C0099D458 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BA4C20283019AB0B0099D458 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BA4C204A3019AB0C0099D458;
+			remoteInfo = "Dark Mode Lite Extension";
+		};
+		E70000013019AB0B0099D458 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BA4C20283019AB0B0099D458 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BA4C202F3019AB0B0099D458;
+			remoteInfo = "Dark Mode Lite";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BA4C20583019AB0C0099D458 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BA4C204C3019AB0C0099D458 /* Dark Mode Lite Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		BA4C20303019AB0B0099D458 /* Dark Mode Lite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dark Mode Lite.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA4C20333019AB0B0099D458 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BA4C20393019AB0B0099D458 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		BA4C20443019AB0C0099D458 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BA4C20463019AB0C0099D458 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA4C204B3019AB0C0099D458 /* Dark Mode Lite Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Dark Mode Lite Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA4C20503019AB0C0099D458 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		BA4C20523019AB0C0099D458 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA4C205D3019AB0C0099D458 /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = background.js; path = Resources/background.js; sourceTree = "<group>"; };
+		BA4C205E3019AB0C0099D458 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = Resources/icons; sourceTree = "<group>"; };
+		BA4C205F3019AB0C0099D458 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = Resources/manifest.json; sourceTree = "<group>"; };
+		BA4C20603019AB0C0099D458 /* content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = content.js; path = Resources/content.js; sourceTree = "<group>"; };
+		D10000013019AB0B0099D458 /* ControllerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerModels.swift; sourceTree = "<group>"; };
+		D10000023019AB0B0099D458 /* SettingsNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNormalizer.swift; sourceTree = "<group>"; };
+		D10000033019AB0B0099D458 /* ManagedTabState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedTabState.swift; sourceTree = "<group>"; };
+		D10000043019AB0B0099D458 /* ControllerWireProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerWireProtocol.swift; sourceTree = "<group>"; };
+		D10000053019AB0B0099D458 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		D10000063019AB0B0099D458 /* BridgeServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/BridgeServer.swift; sourceTree = "<group>"; };
+		D10000073019AB0B0099D458 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		D10000083019AB0B0099D458 /* ControllerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerView.swift; sourceTree = "<group>"; };
+		D10000093019AB0B0099D458 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
+		D100000A3019AB0B0099D458 /* Dark Mode Lite.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Dark Mode Lite.entitlements"; sourceTree = "<group>"; };
+		D100000B3019AB0B0099D458 /* Dark Mode Lite Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Dark Mode Lite Extension.entitlements"; sourceTree = "<group>"; };
+		D100000C3019AB0B0099D458 /* Dark Mode Lite.local.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Dark Mode Lite.local.entitlements"; sourceTree = "<group>"; };
+		D100000D3019AB0B0099D458 /* SafariExtensionBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SafariExtensionBridge.m; sourceTree = "<group>"; };
+		D100000E3019AB0B0099D458 /* SafariExtensionBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SafariExtensionBridge.h; sourceTree = "<group>"; };
+		E10000013019AB0B0099D458 /* Dark Mode Lite UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Dark Mode Lite UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E10000023019AB0B0099D458 /* ControllerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerUITests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BA4C202D3019AB0B0099D458 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BA4C20483019AB0C0099D458 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E40000023019AB0B0099D458 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BA4C20273019AB0B0099D458 = {
+			isa = PBXGroup;
+			children = (
+				BA4C20323019AB0B0099D458 /* Dark Mode Lite */,
+				BA4C204F3019AB0C0099D458 /* Dark Mode Lite Extension */,
+				E30000013019AB0B0099D458 /* Dark Mode Lite UITests */,
+				BA4C20313019AB0B0099D458 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BA4C20313019AB0B0099D458 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BA4C20303019AB0B0099D458 /* Dark Mode Lite.app */,
+				BA4C204B3019AB0C0099D458 /* Dark Mode Lite Extension.appex */,
+				E10000013019AB0B0099D458 /* Dark Mode Lite UITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BA4C20323019AB0B0099D458 /* Dark Mode Lite */ = {
+			isa = PBXGroup;
+			children = (
+				BA4C20333019AB0B0099D458 /* AppDelegate.swift */,
+				D10000073019AB0B0099D458 /* AppModel.swift */,
+				D10000063019AB0B0099D458 /* BridgeServer.swift */,
+				D10000083019AB0B0099D458 /* ControllerView.swift */,
+				D10000053019AB0B0099D458 /* SettingsStore.swift */,
+				D10000093019AB0B0099D458 /* StatusBarController.swift */,
+				D100000D3019AB0B0099D458 /* SafariExtensionBridge.m */,
+				D100000E3019AB0B0099D458 /* SafariExtensionBridge.h */,
+				D30000013019AB0B0099D458 /* Core */,
+				BA4C20443019AB0C0099D458 /* Assets.xcassets */,
+				D100000A3019AB0B0099D458 /* Dark Mode Lite.entitlements */,
+				D100000C3019AB0B0099D458 /* Dark Mode Lite.local.entitlements */,
+				BA4C20463019AB0C0099D458 /* Info.plist */,
+				BA4C20353019AB0B0099D458 /* Resources */,
+			);
+			path = "Dark Mode Lite";
+			sourceTree = "<group>";
+		};
+		BA4C20353019AB0B0099D458 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BA4C20393019AB0B0099D458 /* Icon.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		BA4C204F3019AB0C0099D458 /* Dark Mode Lite Extension */ = {
+			isa = PBXGroup;
+			children = (
+				BA4C205C3019AB0C0099D458 /* Resources */,
+				BA4C20503019AB0C0099D458 /* SafariWebExtensionHandler.swift */,
+				BA4C20523019AB0C0099D458 /* Info.plist */,
+			);
+			path = "Dark Mode Lite Extension";
+			sourceTree = "<group>";
+		};
+		BA4C205C3019AB0C0099D458 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BA4C205D3019AB0C0099D458 /* background.js */,
+				BA4C205E3019AB0C0099D458 /* icons */,
+				BA4C205F3019AB0C0099D458 /* manifest.json */,
+				BA4C20603019AB0C0099D458 /* content.js */,
+			);
+			name = Resources;
+			path = "Dark Mode Lite Extension";
+			sourceTree = SOURCE_ROOT;
+		};
+		D30000013019AB0B0099D458 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				D10000013019AB0B0099D458 /* ControllerModels.swift */,
+				D10000023019AB0B0099D458 /* SettingsNormalizer.swift */,
+				D10000033019AB0B0099D458 /* ManagedTabState.swift */,
+				D10000043019AB0B0099D458 /* ControllerWireProtocol.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		E30000013019AB0B0099D458 /* Dark Mode Lite UITests */ = {
+			isa = PBXGroup;
+			children = (
+				E10000023019AB0B0099D458 /* ControllerUITests.swift */,
+			);
+			path = "Dark Mode Lite UITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BA4C202F3019AB0B0099D458 /* Dark Mode Lite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA4C20593019AB0C0099D458 /* Build configuration list for PBXNativeTarget "Dark Mode Lite" */;
+			buildPhases = (
+				BA4C202C3019AB0B0099D458 /* Sources */,
+				BA4C202D3019AB0B0099D458 /* Frameworks */,
+				BA4C202E3019AB0B0099D458 /* Resources */,
+				BA4C20583019AB0C0099D458 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BA4C204E3019AB0C0099D458 /* PBXTargetDependency */,
+			);
+			name = "Dark Mode Lite";
+			packageProductDependencies = (
+			);
+			productName = "Dark Mode Lite";
+			productReference = BA4C20303019AB0B0099D458 /* Dark Mode Lite.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BA4C204A3019AB0C0099D458 /* Dark Mode Lite Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA4C20553019AB0C0099D458 /* Build configuration list for PBXNativeTarget "Dark Mode Lite Extension" */;
+			buildPhases = (
+				BA4C20473019AB0C0099D458 /* Sources */,
+				BA4C20483019AB0C0099D458 /* Frameworks */,
+				BA4C20493019AB0C0099D458 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Dark Mode Lite Extension";
+			packageProductDependencies = (
+			);
+			productName = "Dark Mode Lite Extension";
+			productReference = BA4C204B3019AB0C0099D458 /* Dark Mode Lite Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		E50000013019AB0B0099D458 /* Dark Mode Lite UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E60000033019AB0B0099D458 /* Build configuration list for PBXNativeTarget "Dark Mode Lite UITests" */;
+			buildPhases = (
+				E40000013019AB0B0099D458 /* Sources */,
+				E40000023019AB0B0099D458 /* Frameworks */,
+				E40000033019AB0B0099D458 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E70000023019AB0B0099D458 /* PBXTargetDependency */,
+			);
+			name = "Dark Mode Lite UITests";
+			packageProductDependencies = (
+			);
+			productName = "Dark Mode Lite UITests";
+			productReference = E10000013019AB0B0099D458 /* Dark Mode Lite UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BA4C20283019AB0B0099D458 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2660;
+				LastUpgradeCheck = 2660;
+				TargetAttributes = {
+					E50000013019AB0B0099D458 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = BA4C202F3019AB0B0099D458;
+					};
+					BA4C202F3019AB0B0099D458 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					BA4C204A3019AB0C0099D458 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+				};
+			};
+			buildConfigurationList = BA4C202B3019AB0B0099D458 /* Build configuration list for PBXProject "Dark Mode Lite" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BA4C20273019AB0B0099D458;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = BA4C20313019AB0B0099D458 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E50000013019AB0B0099D458 /* Dark Mode Lite UITests */,
+				BA4C202F3019AB0B0099D458 /* Dark Mode Lite */,
+				BA4C204A3019AB0C0099D458 /* Dark Mode Lite Extension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BA4C202E3019AB0B0099D458 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA4C203A3019AB0B0099D458 /* Icon.png in Resources */,
+				BA4C20453019AB0C0099D458 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BA4C20493019AB0C0099D458 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA4C20643019AB0C0099D458 /* content.js in Resources */,
+				BA4C20613019AB0C0099D458 /* background.js in Resources */,
+				BA4C20633019AB0C0099D458 /* manifest.json in Resources */,
+				BA4C20623019AB0C0099D458 /* icons in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E40000033019AB0B0099D458 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BA4C202C3019AB0B0099D458 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA4C20343019AB0B0099D458 /* AppDelegate.swift in Sources */,
+				D20000013019AB0B0099D458 /* ControllerModels.swift in Sources */,
+				D20000023019AB0B0099D458 /* SettingsNormalizer.swift in Sources */,
+				D20000033019AB0B0099D458 /* ManagedTabState.swift in Sources */,
+				D20000043019AB0B0099D458 /* ControllerWireProtocol.swift in Sources */,
+				D20000053019AB0B0099D458 /* SettingsStore.swift in Sources */,
+				D20000063019AB0B0099D458 /* BridgeServer.swift in Sources */,
+				D20000073019AB0B0099D458 /* AppModel.swift in Sources */,
+				D20000083019AB0B0099D458 /* ControllerView.swift in Sources */,
+				D20000093019AB0B0099D458 /* StatusBarController.swift in Sources */,
+				D200000A3019AB0B0099D458 /* SafariExtensionBridge.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BA4C20473019AB0C0099D458 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA4C20513019AB0C0099D458 /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E40000013019AB0B0099D458 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E20000013019AB0B0099D458 /* ControllerUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BA4C204E3019AB0C0099D458 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BA4C204A3019AB0C0099D458 /* Dark Mode Lite Extension */;
+			targetProxy = BA4C204D3019AB0C0099D458 /* PBXContainerItemProxy */;
+		};
+		E70000023019AB0B0099D458 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BA4C202F3019AB0B0099D458 /* Dark Mode Lite */;
+			targetProxy = E70000013019AB0B0099D458 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		BA4C20533019AB0C0099D458 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BA4C20543019AB0C0099D458 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		BA4C20563019AB0C0099D458 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				CODE_SIGN_ENTITLEMENTS = "Dark Mode Lite Extension/Dark Mode Lite Extension.entitlements";
+				INFOPLIST_FILE = "Dark Mode Lite Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Dark Mode Lite Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = sh.gocanto.darkmodelite.Extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		BA4C20573019AB0C0099D458 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				CODE_SIGN_ENTITLEMENTS = "Dark Mode Lite Extension/Dark Mode Lite Extension.entitlements";
+				INFOPLIST_FILE = "Dark Mode Lite Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Dark Mode Lite Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = sh.gocanto.darkmodelite.Extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		BA4C205A3019AB0C0099D458 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				CODE_SIGN_ENTITLEMENTS = "Dark Mode Lite/Dark Mode Lite.entitlements";
+				INFOPLIST_FILE = "Dark Mode Lite/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Dark Mode Lite";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sh.gocanto.darkmodelite;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Dark Mode Lite/SafariExtensionBridge.h";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		BA4C205B3019AB0C0099D458 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				CODE_SIGN_ENTITLEMENTS = "Dark Mode Lite/Dark Mode Lite.entitlements";
+				INFOPLIST_FILE = "Dark Mode Lite/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Dark Mode Lite";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sh.gocanto.darkmodelite;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Dark Mode Lite/SafariExtensionBridge.h";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		E60000013019AB0B0099D458 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sh.gocanto.darkmodelite.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TEST_TARGET_NAME = "Dark Mode Lite";
+			};
+			name = Debug;
+		};
+		E60000023019AB0B0099D458 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sh.gocanto.darkmodelite.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TEST_TARGET_NAME = "Dark Mode Lite";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BA4C202B3019AB0B0099D458 /* Build configuration list for PBXProject "Dark Mode Lite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA4C20533019AB0C0099D458 /* Debug */,
+				BA4C20543019AB0C0099D458 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BA4C20553019AB0C0099D458 /* Build configuration list for PBXNativeTarget "Dark Mode Lite Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA4C20563019AB0C0099D458 /* Debug */,
+				BA4C20573019AB0C0099D458 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BA4C20593019AB0C0099D458 /* Build configuration list for PBXNativeTarget "Dark Mode Lite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA4C205A3019AB0C0099D458 /* Debug */,
+				BA4C205B3019AB0C0099D458 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E60000033019AB0B0099D458 /* Build configuration list for PBXNativeTarget "Dark Mode Lite UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E60000013019AB0B0099D458 /* Debug */,
+				E60000023019AB0B0099D458 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BA4C20283019AB0B0099D458 /* Project object */;
+}

@@ -45,6 +45,19 @@ describe('settings parsers', () => {
 		});
 	});
 
+	it('normalizes host casing, empty keys, and unknown active presets', () => {
+		const settings = SettingsCodec.parseSettings({
+			siteOverrides: {
+				' WWW.Example.com ': false,
+				'': true,
+			},
+			activePresetId: 'missing-preset',
+		});
+
+		expect(settings.siteOverrides).toEqual({ 'example.com': false });
+		expect(settings.activePresetId).toBeNull();
+	});
+
 	it('preserves legacy invert migration behavior', () => {
 		expect(SettingsCodec.parseSettings({ mode: 'invert' }).mode).toBe('smart');
 		expect(SettingsCodec.parseSettings({ mode: 'invert', settingsVersion: 2 }).mode).toBe('invert');

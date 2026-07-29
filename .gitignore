@@ -55,6 +55,12 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 dist/
+controller-dist/
+
+# Swift/Xcode local state
+.build/
+.swiftpm/
+xcuserdata/
 
 # Chrome Web Store packages (pnpm package:store output)
 release/

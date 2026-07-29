@@ -1,6 +1,7 @@
 # Dark Mode — Lite
 
-A compact Chrome (MV3) extension that adds a real dark mode to sites that don't ship one.
+A compact browser extension and native macOS controller that add a real dark mode to sites
+that don't ship one.
 
 <p align="center">
   <img src="storage/promo-marquee-1400x560.png" alt="Dark Mode — Lite: dark mode for every site, with smart per-page tuning, saved presets, and per-site control" width="100%">
@@ -49,23 +50,33 @@ Then load it in Chrome:
 2. Enable **Developer mode**
 3. **Load unpacked** → select the `apps/extension/dist/` folder
 
+### Native macOS controller
+
+On macOS 14 or newer, build and launch the Dockless menu-bar controller with:
+
+```bash
+make run
+```
+
+The app embeds its Safari WebExtension and pairs with the separately packaged Chrome and
+Firefox companions. See [apps/macos/README.md](apps/macos/README.md) for local setup and
+[docs/macos-release.md](docs/macos-release.md) for unsigned, Developer ID, and Mac App Store
+distribution.
+
 ## How it works
 
 Two independent pieces talk over Chrome's messaging APIs:
 
 - **Popup** (`apps/extension/src/popup/`) — a Vue 3 + Tailwind 4 UI. State lives in a
   `PopupController` class that reads/writes settings and mirrors them to the active tab.
-- **Content script** (`apps/extension/src/content.ts`) — a `ContentScript` class that injects
-  the CSS/JS that actually darkens the page, per the selected mode.
+- **Content adapters** (`apps/extension/src/content.ts`, `controllerContent.ts`) — small
+  browser-runtime adapters around the API-independent `DarkModeEngine`.
+- **Native controller** (`apps/macos/`) — a Swift 6 menu-bar app that owns settings,
+  browser pairing, tab selection, and the loopback protocol.
 
-Both share the same `Settings` shape (`apps/extension/src/types/settings.ts`). All non‑component logic is
-class‑based (`SettingsCodec`, `ChromeRuntimeAdapter`, `SettingsGateway`, `PopupStateBuilder`,
-`ContentScript`); Vue single‑file components and the `usePopupController` composable stay
+Both browser integrations share the same `SettingsCodec` and DOM engine. Stateful
+TypeScript logic remains class-based; Vue single-file components and composables stay
 idiomatic.
-
-> Note: the content script keeps its own copy of the settings parser and **overwrites
-> storage** on every change, so any new persisted field must be added to *both*
-> `SettingsCodec` and `ContentScript`.
 
 ## Development
 
@@ -81,7 +92,9 @@ pnpm test           # run unit/feature tests (Vitest, via Vite+)
 pnpm typecheck      # vue-tsc type check across all packages
 pnpm check          # paths + tests + typecheck + builds (run before pushing)
 pnpm package:store  # build + validate + zip the Chrome Web Store package
+pnpm package:controllers # package Chrome and Firefox companions
 pnpm format-all     # format the whole tree
+make run            # build and launch the native macOS controller
 ```
 
 This is a **pnpm workspace monorepo**: the extension build uses **Vite+** (`vp`); the website
@@ -104,12 +117,16 @@ apps/
       manifest.json              # MV3 manifest (copied verbatim into dist/)
       icons/                     # extension icons (16/32/48/128)
     src/
-      content.ts                 # page dark-mode engine (ContentScript class)
+      content.ts                 # Chrome extension content adapter
+      content/DarkModeEngine.ts  # API-independent DOM engine
+      controller*.ts             # native-controller WebExtension adapters
       types/settings.ts          # shared Settings model + SettingsCodec
       popup/
         App.vue                  # popup root
         components/              # UI (popup sections + shadcn-vue primitives)
         composables/PopupController/ # controller, runtime adapter, settings gateway
+  controller-extension/          # Safari/Chromium/Firefox companion manifests
+  macos/                         # Swift 6 menu-bar app + Safari extension + tests
   web/                           # @dml/web — the marketing site (VitePress, deploys to Cloudflare Pages)
     .vitepress/                  # VitePress config + custom theme entry
     src/                         # Layout, views, components, styles

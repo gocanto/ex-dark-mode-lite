@@ -38,6 +38,25 @@ jobs:
       - run: pnpm run build
       - run: pnpm run build:web
 
+  macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Swift format check
+        run: |
+          make macos-format
+          git diff --exit-code -- apps/macos
+      - name: Native unit/UI tests and unsigned build
+        run: make macos-test
+      - name: Bundled Safari resources are current
+        run: git diff --exit-code -- apps/macos
+
   # Instrumented coverage gate (opt-in via the coverage-all label). Enforces
   # >=50% lines/functions/branches (thresholds live in vitest.config.ts) and
   # posts a sticky PR comment with the numbers.
@@ -99,18 +118,26 @@ jobs:
           echo "Coverage gate failed (< 50%). See the Coverage step above."
           exit 1
 
-  # E2E matrix (opt-in via any e2e-* label). Ready-for-review PRs only —
-  # skipped on drafts. No Playwright specs exist yet, so the job reports that
-  # and passes; it becomes a real matrix once e2e specs land.
+  # E2E acceptance (opt-in via any e2e-* label). Ready-for-review PRs only.
   e2e:
     if: ${{ !github.event.pull_request.draft && contains(join(github.event.pull_request.labels.*.name, ','), 'e2e-') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
       - name: Run E2E (Playwright-managed Chromium)
-        run: |
-          if [ -f playwright.config.ts ] || [ -d e2e ]; then
-            echo "Playwright config/specs found but no runner is wired yet." >&2
-            exit 1
-          fi
-          echo "::notice title=E2E::No Playwright E2E specs exist yet; nothing to run. Add specs + playwright.config.ts to enable the matrix."
+        env:
+          PLAYWRIGHT_ARTIFACTS_DIR: ${{ runner.temp }}/browser-artifacts
+        run: pnpm run e2e
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: playwright-browser-artifacts
+          path: ${{ runner.temp }}/browser-artifacts
+          if-no-files-found: ignore

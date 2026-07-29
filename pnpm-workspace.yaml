@@ -9,6 +9,7 @@ catalog:
   '@fontsource-variable/geist': ^5.2.9
   '@fontsource-variable/geist-mono': ^5.2.8
   '@lucide/vue': ^1.23.0
+  '@playwright/test': ^1.62.0
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
   reka-ui: ^2.10.1

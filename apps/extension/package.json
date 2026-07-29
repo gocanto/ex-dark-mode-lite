@@ -6,7 +6,8 @@
   "description": "A compact MV3 dark-mode extension built with Vue, Vite+, Tailwind CSS, and shadcn-vue.",
   "scripts": {
     "dev": "vp dev --host 127.0.0.1",
-    "build": "vp build",
+    "build": "vp build && vp build --config vite.content.config.ts",
+    "build:controller": "DML_CONTROLLER_ENTRY=background vp build --config vite.controller.config.ts && DML_CONTROLLER_ENTRY=content vp build --config vite.controller.config.ts",
     "preview": "vp preview --host 127.0.0.1",
     "test": "vp test run",
     "test:coverage": "vp test run --coverage",

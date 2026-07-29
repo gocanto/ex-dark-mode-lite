@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const FMT_IMAGE = 'ghcr.io/oullin/go-fmt:v0.4.3';
+const FMT_IMAGE = 'ghcr.io/oullin/fmtkit:v0.4.6-node-ts';
 const FILE_GLOBS = ['*.ts', '*.tsx', '*.vue', '*.mts', '*.cts'];
 const BATCH_SIZE = 400;
 

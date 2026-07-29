@@ -1,0 +1,29 @@
+name: Chrome and Firefox controller packages
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: controller-extension-packages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run package:controllers
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chrome-firefox-controller-packages
+          path: release/controller/*.zip
+          if-no-files-found: error

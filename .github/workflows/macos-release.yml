@@ -1,0 +1,206 @@
+name: macOS release
+
+on:
+  workflow_dispatch:
+    inputs:
+      distribution:
+        description: Distribution artifact to produce
+        type: choice
+        default: unsigned
+        options:
+          - unsigned
+          - developer-id
+          - app-store
+
+concurrency:
+  group: macos-release-${{ inputs.distribution }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    runs-on: macos-15
+    env:
+      ARCHIVE_PATH: ${{ github.workspace }}/release/macos/DarkModeLite.xcarchive
+      APP_PATH: ${{ github.workspace }}/release/macos/DarkModeLite.xcarchive/Products/Applications/Dark Mode Lite.app
+      PROJECT_PATH: ${{ github.workspace }}/apps/macos/Dark Mode Lite/Dark Mode Lite.xcodeproj
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run sync:safari
+
+      - name: Import Apple signing certificate
+        if: ${{ inputs.distribution != 'unsigned' }}
+        env:
+          APPLE_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          if [ -z "$APPLE_CERTIFICATE_BASE64" ] || [ -z "$APPLE_CERTIFICATE_PASSWORD" ] || [ -z "$KEYCHAIN_PASSWORD" ]; then
+            echo "::error title=Missing signing secrets::Set APPLE_CERTIFICATE_BASE64, APPLE_CERTIFICATE_PASSWORD, and KEYCHAIN_PASSWORD."
+            exit 1
+          fi
+          certificate_path="$RUNNER_TEMP/signing.p12"
+          keychain_path="$RUNNER_TEMP/dark-mode-lite.keychain-db"
+          echo -n "$APPLE_CERTIFICATE_BASE64" | base64 --decode > "$certificate_path"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$keychain_path"
+          security set-keychain-settings -lut 21600 "$keychain_path"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$keychain_path"
+          security import "$certificate_path" -P "$APPLE_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$keychain_path"
+          security list-keychain -d user -s "$keychain_path"
+
+      - name: Install provisioning profiles
+        if: ${{ inputs.distribution != 'unsigned' }}
+        env:
+          APPLE_APP_PROFILE_BASE64: ${{ secrets.APPLE_APP_PROFILE_BASE64 }}
+          APPLE_EXTENSION_PROFILE_BASE64: ${{ secrets.APPLE_EXTENSION_PROFILE_BASE64 }}
+        run: |
+          if [ -z "$APPLE_APP_PROFILE_BASE64" ] || [ -z "$APPLE_EXTENSION_PROFILE_BASE64" ]; then
+            echo "::error title=Missing provisioning profiles::Set APPLE_APP_PROFILE_BASE64 and APPLE_EXTENSION_PROFILE_BASE64."
+            exit 1
+          fi
+          profile_dir="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$profile_dir"
+          install_profile() {
+            profile_name="$1"
+            encoded_profile="$2"
+            profile_path="$RUNNER_TEMP/${profile_name}.provisionprofile"
+            echo -n "$encoded_profile" | base64 --decode > "$profile_path"
+            profile_plist="$RUNNER_TEMP/${profile_name}.plist"
+            security cms -D -i "$profile_path" > "$profile_plist"
+            profile_uuid=$(/usr/libexec/PlistBuddy -c "Print :UUID" "$profile_plist")
+            cp "$profile_path" "$profile_dir/$profile_uuid.provisionprofile"
+          }
+          install_profile app "$APPLE_APP_PROFILE_BASE64"
+          install_profile extension "$APPLE_EXTENSION_PROFILE_BASE64"
+
+      - name: Build unsigned archive
+        if: ${{ inputs.distribution == 'unsigned' }}
+        run: |
+          mkdir -p "$(dirname "$ARCHIVE_PATH")"
+          xcodebuild archive \
+            -project "$PROJECT_PATH" \
+            -scheme "Dark Mode Lite" \
+            -configuration Release \
+            -archivePath "$ARCHIVE_PATH" \
+            CODE_SIGNING_ALLOWED=NO \
+            SKIP_INSTALL=NO
+
+      - name: Build signed archive
+        if: ${{ inputs.distribution != 'unsigned' }}
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -z "$APPLE_TEAM_ID" ]; then
+            echo "::error title=Missing team::Set APPLE_TEAM_ID before creating signed archives."
+            exit 1
+          fi
+          mkdir -p "$(dirname "$ARCHIVE_PATH")"
+          xcodebuild archive \
+            -project "$PROJECT_PATH" \
+            -scheme "Dark Mode Lite" \
+            -configuration Release \
+            -archivePath "$ARCHIVE_PATH" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            -allowProvisioningUpdates
+
+      - name: Package unsigned archive
+        if: ${{ inputs.distribution == 'unsigned' }}
+        run: |
+          ditto -c -k --keepParent "$APP_PATH" "${{ github.workspace }}/release/macos/dark-mode-lite-unsigned.zip"
+          ditto -c -k --keepParent "$ARCHIVE_PATH" "${{ github.workspace }}/release/macos/dark-mode-lite-unsigned-xcarchive.zip"
+
+      - name: Create Developer ID DMG
+        if: ${{ inputs.distribution == 'developer-id' }}
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -z "$APPLE_ID" ] || [ -z "$APPLE_APP_PASSWORD" ] || [ -z "$APPLE_TEAM_ID" ]; then
+            echo "::error title=Missing notarization secrets::Set APPLE_ID, APPLE_APP_PASSWORD, and APPLE_TEAM_ID."
+            exit 1
+          fi
+          export_path="${{ github.workspace }}/release/macos/developer-id"
+          export_options="$RUNNER_TEMP/ExportOptions.plist"
+          cat > "$export_options" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>developer-id</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
+          </dict></plist>
+          PLIST
+          xcodebuild -exportArchive \
+            -archivePath "$ARCHIVE_PATH" \
+            -exportPath "$export_path" \
+            -exportOptionsPlist "$export_options" \
+            -allowProvisioningUpdates
+          dmg_path="${{ github.workspace }}/release/macos/dark-mode-lite.dmg"
+          hdiutil create -volname "Dark Mode Lite" -srcfolder "$export_path/Dark Mode Lite.app" -ov -format UDZO "$dmg_path"
+          xcrun notarytool submit "$dmg_path" \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_APP_PASSWORD" \
+            --team-id "$APPLE_TEAM_ID" \
+            --wait
+          xcrun stapler staple "$dmg_path"
+
+      - name: Upload Mac App Store archive
+        if: ${{ inputs.distribution == 'app-store' }}
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_STORE_API_KEY_ID: ${{ secrets.APP_STORE_API_KEY_ID }}
+          APP_STORE_API_ISSUER_ID: ${{ secrets.APP_STORE_API_ISSUER_ID }}
+          APP_STORE_API_PRIVATE_KEY: ${{ secrets.APP_STORE_API_PRIVATE_KEY }}
+        run: |
+          if [ -z "$APP_STORE_API_KEY_ID" ] || [ -z "$APP_STORE_API_ISSUER_ID" ] || [ -z "$APP_STORE_API_PRIVATE_KEY" ]; then
+            echo "::error title=Missing App Store credentials::Set the App Store Connect API key secrets."
+            exit 1
+          fi
+          key_path="$RUNNER_TEMP/AuthKey_${APP_STORE_API_KEY_ID}.p8"
+          export_options="$RUNNER_TEMP/ExportOptions.plist"
+          printf '%s' "$APP_STORE_API_PRIVATE_KEY" > "$key_path"
+          cat > "$export_options" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
+          </dict></plist>
+          PLIST
+          xcodebuild -exportArchive \
+            -archivePath "$ARCHIVE_PATH" \
+            -exportOptionsPlist "$export_options" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$key_path" \
+            -authenticationKeyID "$APP_STORE_API_KEY_ID" \
+            -authenticationKeyIssuerID "$APP_STORE_API_ISSUER_ID"
+
+      - name: Remove temporary signing keychain
+        if: ${{ always() && inputs.distribution != 'unsigned' }}
+        env:
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          keychain_path="$RUNNER_TEMP/dark-mode-lite.keychain-db"
+          if [ -f "$keychain_path" ]; then
+            security delete-keychain "$keychain_path"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.distribution != 'app-store' }}
+        with:
+          name: dark-mode-lite-${{ inputs.distribution }}
+          path: |
+            release/macos/*.zip
+            release/macos/*.dmg
+          if-no-files-found: error

@@ -80,7 +80,10 @@ export type PopupMessage =
 export class SettingsCodec {
 	/** Normalize a hostname for settings lookup. */
 	static normalizeHost(host: string) {
-		return host.replace(/^www\./, '');
+		return host
+			.trim()
+			.toLowerCase()
+			.replace(/^www\./, '');
 	}
 
 	/** Parse a theme mode from untrusted input. */
@@ -196,6 +199,12 @@ export class SettingsCodec {
 
 		nextSettings.settingsVersion = DEFAULT_SETTINGS.settingsVersion;
 
+		const validPresetIds = new Set([...BUILT_IN_PRESETS.map((preset) => preset.id), ...nextSettings.customPresets.map((preset) => preset.id)]);
+
+		if (nextSettings.activePresetId !== null && !validPresetIds.has(nextSettings.activePresetId)) {
+			nextSettings.activePresetId = null;
+		}
+
 		return nextSettings;
 	}
 
@@ -277,9 +286,14 @@ export class SettingsCodec {
 
 		const siteOverrides: Record<string, boolean> = {};
 
-		for (const [host, enabled] of Object.entries(input)) {
+		for (const host of Object.keys(input).sort()) {
+			const enabled = input[host];
+			const normalizedHost = SettingsCodec.normalizeHost(host);
+
 			if (typeof enabled === 'boolean') {
-				siteOverrides[SettingsCodec.normalizeHost(host)] = enabled;
+				if (normalizedHost.length > 0) {
+					siteOverrides[normalizedHost] = enabled;
+				}
 			}
 		}
 
